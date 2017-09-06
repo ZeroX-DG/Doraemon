@@ -3,9 +3,14 @@ use Model\Users;
 class HomeController{
 	public function Index(){
 		$users = Users::all();
-		foreach ($users as $user) {
-			print_r($user->UserName);
-		}
+		$hello = "dit me";
+		View("index", [
+			"ditme" => $hello,
+			"hello" => "TUng Tom"
+			]);
+	}
+	public function chao($so){
+		echo "Hello " . $so;
 	}
 }
 ?>
