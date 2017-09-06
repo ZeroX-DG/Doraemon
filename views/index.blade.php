@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>index</title>
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="<?php echo assets('assets/bootstrap/css/bootstrap.min.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assets('assets/bootstrap/css/style.css'); ?>">
 </head>
 
 <body>
@@ -24,6 +24,7 @@
         </div>
     </nav>
     <div class="container">
+        {{ $hello }}
         <h1 class="text-center">Quản lý Doraemon</h1>
         <div class="row">
             <div class="col-md-6 col-md-offset-3"><a class="btn btn-primary btn-block btn-lg" role="button" href="#">Tính lương nhân viên</a>

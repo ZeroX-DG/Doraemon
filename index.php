@@ -24,6 +24,13 @@ $capsule->setAsGlobal();
 
 // Setup the Eloquent ORM
 $capsule->bootEloquent();
+// Folder stuff
+define('VIEW_FOLDER', dirname($_SERVER["SCRIPT_NAME"]).'/views/');
+// Require view class
+use Jenssegers\Blade\Blade;
+$GLOBALS['blade'] = new Blade('views', 'cache');
+// Require helpers
+require 'libs/Helpers.php';
 // Require models
 foreach (glob("models/*.php") as $filename)
 {
