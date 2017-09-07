@@ -1,0 +1,14 @@
+#container-fluid{
+  background:doraemon.jpg;
+}
+
+body#login{
+  background:url(../../assets/img/mon3.jpg) no-repeat;
+  background-size:100% 100%;
+  width:100%;
+  height:100%;
+}
+
+div.container-fluid{
+}
+
