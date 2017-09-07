@@ -1,7 +1,13 @@
 <?php
 class HomeController{
 	public function Index(){
-		View("index");
+		if($_SESSION['Role'] == ADMIN_ROLE)
+		{
+			View("AdminIndex");
+		}
+		else{
+			View("EmployeeIndex");
+		}
 	}
 }
 ?>

@@ -22,6 +22,8 @@ $capsule->setEventDispatcher(new Dispatcher(new Container));
 $capsule->setAsGlobal();
 // Setup the Eloquent ORM
 $capsule->bootEloquent();
+// start session
+session_start();
 // constants
 require 'libs/constants.php';
 // Require view class
@@ -33,7 +35,8 @@ $GLOBALS['m'] = new Mustache_Engine(
             return htmlspecialchars($value, ENT_COMPAT, 'UTF-8');
         },
         'helpers' => [
-            "view_path" => VIEW_FOLDER
+            "view_path" => VIEW_FOLDER,
+            "base_path" => MAIN_PATH
         ]
     )
 );

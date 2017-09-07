@@ -22,14 +22,19 @@
                 <h1 class="text-center" id="title">Doraemon </h1>
                 <form class="bootstrap-form-with-validation" method="post">
                     <h2 class="text-center">Đăng nhập</h2>
-                    {{error}}
+                    {{#hasError}}
+                    <div class="alert alert-danger">
+                        <strong>Error !</strong> 
+                        {{error}}
+                    </div>
+                    {{/hasError}}
                     <div class="form-group">
                         <label class="control-label" for="text-input" id="lb_username">Tên đăng nhập</label>
-                        <input class="form-control" type="text" name="text-input" id="text-input">
+                        <input class="form-control" type="text" name="userName" id="text-input">
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="password-input" id="lb_pass">Mật khẩu</label>
-                        <input class="form-control" type="password" name="password-input" id="password-input">
+                        <input class="form-control" type="password" name="passWord" id="password-input">
                     </div>
                     <div class="form-group"></div>
                     <div class="form-group">

@@ -7,10 +7,10 @@ class LoginController{
 
 	public function doLogin(){
 		$username = addslashes($_POST['userName']);
-		$password = addslashes($_POST['password']);
+		$password = addslashes($_POST['passWord']);
 		// find user
 		$foundUser = Users::where('UserName','=',$username)
-							->where('PassWord', '=', $password)
+							->where('PassWord', '=', md5($password))
 							->get();
 		// if only 1 user found !
 		if(count($foundUser) == 1){
@@ -23,7 +23,7 @@ class LoginController{
 			redirect('/');
 		}
 		else{
-			return View("login", ["error" => "Wrong username or password"]);
+			return View("login", ["error" => "Wrong username or password", "hasError" => true]);
 		}
 	}
 }
