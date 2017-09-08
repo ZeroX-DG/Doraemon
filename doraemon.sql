@@ -3,12 +3,13 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 06, 2017 at 06:42 AM
+-- Generation Time: Sep 08, 2017 at 06:22 PM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -22,10 +23,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `employee_work`
+-- Table structure for table `employee_attendance`
 --
 
-CREATE TABLE `employee_work` (
+CREATE TABLE `employee_attendance` (
   `UserId` int(11) NOT NULL,
   `Date` datetime NOT NULL,
   `ShiftId` int(11) NOT NULL
@@ -56,6 +57,13 @@ CREATE TABLE `schedules` (
   `Name` varchar(100) COLLATE utf8_vietnamese_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
 
+--
+-- Dumping data for table `schedules`
+--
+
+INSERT INTO `schedules` (`Id`, `Date_start`, `Date_end`, `Name`) VALUES
+(1, '2017-09-11', '2017-09-17', 'Tháng 8 tuần 1');
+
 -- --------------------------------------------------------
 
 --
@@ -63,11 +71,29 @@ CREATE TABLE `schedules` (
 --
 
 CREATE TABLE `schedule_details` (
-  `Id` int(11) NOT NULL,
+  `Schedule_id` int(11) NOT NULL,
   `DayOfWeek` int(11) NOT NULL,
   `ShiftId` int(11) NOT NULL,
   `UserId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
+
+--
+-- Dumping data for table `schedule_details`
+--
+
+INSERT INTO `schedule_details` (`Schedule_id`, `DayOfWeek`, `ShiftId`, `UserId`) VALUES
+(1, 2, 1, 1),
+(1, 2, 1, 2),
+(1, 3, 1, 2),
+(1, 2, 2, 2),
+(1, 3, 3, 2),
+(1, 4, 3, 3),
+(1, 6, 2, 3),
+(1, 7, 1, 1),
+(1, 5, 2, 2),
+(1, 5, 3, 2),
+(1, 8, 1, 3),
+(1, 7, 3, 3);
 
 -- --------------------------------------------------------
 
@@ -81,6 +107,15 @@ CREATE TABLE `shifts` (
   `Time_start` time NOT NULL,
   `Time_end` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
+
+--
+-- Dumping data for table `shifts`
+--
+
+INSERT INTO `shifts` (`Id`, `Name`, `Time_start`, `Time_end`) VALUES
+(1, 'Ca sáng', '07:30:00', '12:00:00'),
+(2, 'Ca Chiều', '15:00:00', '18:00:00'),
+(3, 'Ca Tối', '18:00:00', '22:30:00');
 
 -- --------------------------------------------------------
 
@@ -143,9 +178,19 @@ CREATE TABLE `storage_import_history` (
 CREATE TABLE `users` (
   `Id` int(11) NOT NULL,
   `UserName` varchar(30) COLLATE utf8_vietnamese_ci NOT NULL,
-  `PassWord` varchar(30) COLLATE utf8_vietnamese_ci NOT NULL,
+  `PassWord` varchar(40) COLLATE utf8_vietnamese_ci NOT NULL,
+  `DisplayName` varchar(50) COLLATE utf8_vietnamese_ci NOT NULL,
   `Role` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`Id`, `UserName`, `PassWord`, `DisplayName`, `Role`) VALUES
+(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Admin', 1),
+(2, 'tung', '0f043c901ac151f0e881bb1428b7d8af', 'Minh Tùng', 2),
+(3, 'thao', 'bf32d197f35684b9c075b9eb9823ee0c', 'Cô giáo thảo', 2);
 
 -- --------------------------------------------------------
 
@@ -174,20 +219,32 @@ CREATE TABLE `wage_list` (
 --
 
 --
+-- Indexes for table `employee_attendance`
+--
+ALTER TABLE `employee_attendance`
+  ADD KEY `Fk_User_work_Id` (`UserId`),
+  ADD KEY `Fk_Shift_work_Id` (`ShiftId`);
+
+--
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
   ADD PRIMARY KEY (`Id`);
---
--- Indexes for table `storage_contents`
---
-ALTER TABLE `storage_contents`
-  ADD PRIMARY KEY (`Id`);
+
 --
 -- Indexes for table `schedules`
 --
 ALTER TABLE `schedules`
   ADD PRIMARY KEY (`Id`);
+
+--
+-- Indexes for table `schedule_details`
+--
+ALTER TABLE `schedule_details`
+  ADD KEY `Fk_ScheduleId` (`Schedule_id`),
+  ADD KEY `Fk_ShiftId` (`ShiftId`),
+  ADD KEY `Fk_UserId` (`UserId`);
+
 --
 -- Indexes for table `shifts`
 --
@@ -201,16 +258,28 @@ ALTER TABLE `storages`
   ADD PRIMARY KEY (`Id`);
 
 --
+-- Indexes for table `storage_contents`
+--
+ALTER TABLE `storage_contents`
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `Fk_storageId` (`StorageId`),
+  ADD KEY `Fk_ProductId` (`ProductId`);
+
+--
 -- Indexes for table `storage_export_history`
 --
 ALTER TABLE `storage_export_history`
-  ADD PRIMARY KEY (`Id`);
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `Fk_storageId` (`StorageId`),
+  ADD KEY `Fk_ProductId` (`ProductId`);
 
 --
 -- Indexes for table `storage_import_history`
 --
 ALTER TABLE `storage_import_history`
-  ADD PRIMARY KEY (`Id`);
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `Fk_storageId` (`StorageId`),
+  ADD KEY `Fk_ProductId` (`ProductId`);
 
 --
 -- Indexes for table `users`
@@ -225,32 +294,11 @@ ALTER TABLE `wages`
   ADD PRIMARY KEY (`Id`);
 
 --
--- Indexes for table `schedule_details`
+-- Indexes for table `wage_list`
 --
-ALTER TABLE `schedule_details`
-  ADD KEY `Fk_ScheduleId` (`Id`),
-  ADD KEY `Fk_ShiftId` (`ShiftId`),
-  ADD KEY `Fk_UserId` (`UserId`);
---
--- Indexes for table `storage_import_history`
---
-ALTER TABLE `storage_import_history`
-  ADD KEY `Fk_storageId` (`StorageId`),
-  ADD KEY `Fk_ProductId` (`ProductId`);
-
---
--- Indexes for table `storage_export_history`
---
-ALTER TABLE `storage_export_history`
-  ADD KEY `Fk_storageId` (`StorageId`),
-  ADD KEY `Fk_ProductId` (`ProductId`);
-
---
--- Indexes for table `storage_contents`
---
-ALTER TABLE `storage_contents`
-  ADD KEY `Fk_storageId` (`StorageId`),
-  ADD KEY `Fk_ProductId` (`ProductId`);
+ALTER TABLE `wage_list`
+  ADD KEY `Fk_User_wage_Id` (`UserId`),
+  ADD KEY `Fk_Wage_wage_Id` (`WageId`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -265,12 +313,12 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `schedules`
 --
 ALTER TABLE `schedules`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `shifts`
 --
 ALTER TABLE `shifts`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `storages`
 --
@@ -290,7 +338,7 @@ ALTER TABLE `storage_import_history`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `wages`
 --
@@ -301,10 +349,17 @@ ALTER TABLE `wages`
 --
 
 --
+-- Constraints for table `employee_attendance`
+--
+ALTER TABLE `employee_attendance`
+  ADD CONSTRAINT `Fk_Shift_work_Id` FOREIGN KEY (`ShiftId`) REFERENCES `shifts` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `Fk_User_work_Id` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `schedule_details`
 --
 ALTER TABLE `schedule_details`
-  ADD CONSTRAINT `Fk_ScheduleId` FOREIGN KEY (`Id`) REFERENCES `schedules` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `Fk_ScheduleId` FOREIGN KEY (`Schedule_id`) REFERENCES `schedules` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `Fk_ShiftId` FOREIGN KEY (`ShiftId`) REFERENCES `shifts` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `Fk_UserId` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -316,29 +371,26 @@ ALTER TABLE `storage_contents`
   ADD CONSTRAINT `Fk_storage_storageContent_Id` FOREIGN KEY (`StorageId`) REFERENCES `storages` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `storage_import_history`
---
-ALTER TABLE `storage_import_history`
-  ADD CONSTRAINT `Fk_Product_import_Id` FOREIGN KEY (`ProductId`) REFERENCES `products` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `Fk_storage_import_Id` FOREIGN KEY (`StorageId`) REFERENCES `storages` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE;
---
 -- Constraints for table `storage_export_history`
 --
 ALTER TABLE `storage_export_history`
   ADD CONSTRAINT `Fk_Product_export_Id` FOREIGN KEY (`ProductId`) REFERENCES `products` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `Fk_storage_export_Id` FOREIGN KEY (`StorageId`) REFERENCES `storages` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `storage_import_history`
+--
+ALTER TABLE `storage_import_history`
+  ADD CONSTRAINT `Fk_Product_import_Id` FOREIGN KEY (`ProductId`) REFERENCES `products` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `Fk_storage_import_Id` FOREIGN KEY (`StorageId`) REFERENCES `storages` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 --
 -- Constraints for table `wage_list`
 --
 ALTER TABLE `wage_list`
   ADD CONSTRAINT `Fk_User_wage_Id` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `Fk_Wage_wage_Id` FOREIGN KEY (`WageId`) REFERENCES `wages` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE;
---
--- Constraints for table `employee_work`
---
-ALTER TABLE `employee_work`
-  ADD CONSTRAINT `Fk_User_work_Id` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `Fk_Shift_work_Id` FOREIGN KEY (`ShiftId`) REFERENCES `shifts` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
