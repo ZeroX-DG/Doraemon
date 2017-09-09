@@ -10,6 +10,8 @@ h1#tbl_quanly.text-center{
   z-index:10000;
 }
 .shift-panel{
+  padding-top: 10px;
+  padding-bottom: 10px;
   display: block; 
   border-radius: 5px;
   margin-top: 2px;

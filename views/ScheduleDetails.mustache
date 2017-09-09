@@ -2,69 +2,83 @@
 <body>
     {{> nav}}
     <div>
-        <h3 class="text-center">{{ scheduleInfo.Name }}</h3>
+        <div class="col-md-12 text-center">
+            <h3>{{ scheduleInfo.Name }}</h3>
+        </div>
+        <div style="margin-left: 10px;">
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                Danh sách lịch&nbsp;
+                <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    {{#otherSchedule}}
+                        <li><a href="{{base_path}}/schedules/{{Id}}">{{Name}}</a></li>
+                    {{/otherSchedule}}
+                </ul>
+            </div>
+        </div>
         <br>
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th>Employee </th>
-                    <th class="text-center">Thứ 2</th>
-                    <th class="text-center">Thứ 3</th>
-                    <th class="text-center">Thứ 4</th>
-                    <th class="text-center">Thứ 5</th>
-                    <th class="text-center">Thứ 6</th>
-                    <th class="text-center">Thứ 7</th>
-                    <th class="text-center">Chủ nhật</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#schedules}}
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
                     <tr>
-                        <td>{{DisplayName}}</td>
-                        {{#Shifts}}
-                            <td>
-                                {{#t2}}         
-                                    {{> shift}}
-                                {{/t2}}
-                            </td>
-                            <td>
-                                {{#t3}}         
-                                    {{> shift}}
-                                {{/t3}}
-                            </td>
-                            <td>
-                                {{#t4}}         
-                                    {{> shift}}
-                                {{/t4}}
-                            </td>
-                            <td>
-                                {{#t5}}         
-                                    {{> shift}}
-                                {{/t5}}
-                            </td>
-                            <td>
-                                {{#t6}}         
-                                    {{> shift}}
-                                {{/t6}}
-                            </td>
-                            <td>
-                                {{#t7}}         
-                                    {{> shift}}
-                                {{/t7}}
-                            </td>
-                            <td>
-                                {{#t8}}         
-                                    {{> shift}}
-                                {{/t8}}
-                            </td>
-                        {{/Shifts}}
+                        <th>Employee </th>
+                        <th class="text-center">Thứ 2</th>
+                        <th class="text-center">Thứ 3</th>
+                        <th class="text-center">Thứ 4</th>
+                        <th class="text-center">Thứ 5</th>
+                        <th class="text-center">Thứ 6</th>
+                        <th class="text-center">Thứ 7</th>
+                        <th class="text-center">Chủ nhật</th>
                     </tr>
-                {{/schedules}}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {{#schedules}}
+                        <tr>
+                            <td>{{DisplayName}}</td>
+                            {{#Shifts}}
+                                <td>
+                                    {{#t2}}         
+                                        {{> shift}}
+                                    {{/t2}}
+                                </td>
+                                <td>
+                                    {{#t3}}         
+                                        {{> shift}}
+                                    {{/t3}}
+                                </td>
+                                <td>
+                                    {{#t4}}         
+                                        {{> shift}}
+                                    {{/t4}}
+                                </td>
+                                <td>
+                                    {{#t5}}         
+                                        {{> shift}}
+                                    {{/t5}}
+                                </td>
+                                <td>
+                                    {{#t6}}         
+                                        {{> shift}}
+                                    {{/t6}}
+                                </td>
+                                <td>
+                                    {{#t7}}         
+                                        {{> shift}}
+                                    {{/t7}}
+                                </td>
+                                <td>
+                                    {{#t8}}         
+                                        {{> shift}}
+                                    {{/t8}}
+                                </td>
+                            {{/Shifts}}
+                        </tr>
+                    {{/schedules}}
+                </tbody>
+            </table>
+        </div>
     </div>
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 </body>
-
-</html>
+{{> bottom}}

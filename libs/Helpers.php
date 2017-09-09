@@ -12,4 +12,6 @@ function redirect($url, $statusCode = 303){
    header('Location: ' . MAIN_PATH . $url, true, $statusCode);
    die();
 }
+
+
 ?>

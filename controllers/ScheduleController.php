@@ -17,16 +17,30 @@ class ScheduleController{
 		return $allSchedule->toArray();
 	}
 
-	public function details($scheduleId){
+	public function details($scheduleId = null){
 		// data to render
 		$data = [];
 		// schedule info
-		$scheduleInfo = Schedules::find($scheduleId)->toArray();
+		$scheduleInfo = null;
+		if($scheduleId == null){
+			// if there's no schedule id 
+			// then get the latest one !
+			$scheduleInfo = Schedules::orderBy('id', 'desc')->first();
+		}
+		else{
+			$scheduleInfo = Schedules::find($scheduleId);
+		}	
+		
+		if($scheduleInfo == null){
+			echo "Schedule not found !";
+			return;
+		}
+		$scheduleInfo = $scheduleInfo->toArray();
 		// get employee list
 		$employees = Users::where('Role', '>', ADMIN_ROLE)->get();
 		// call getEmployeeSchedule with employee id
 		foreach($employees as $employee){
-			$schedules = $this->getEmployeeSchedule($scheduleId, $employee->Id);
+			$schedules = $this->getEmployeeSchedule($scheduleInfo["Id"], $employee->Id);
 			// get shift details
 			$shifts_details = []; 
 			for($i = 2; $i < 9; $i++){
@@ -34,32 +48,48 @@ class ScheduleController{
 			}
 			foreach($schedules as $schedule){
 				// key for array
-				// 8 is sunday
 				$dayOfWeek = "t".$schedule["DayOfWeek"];
 				
 				$shift = Shifts::find($schedule["ShiftId"])->toArray();
-				$dateParts = date_parse($shift["Time_start"]);
+				$timeStartParts = date_parse($shift["Time_start"]);
+				$timeEndParts = date_parse($shift["Time_end"]);
 				$timeAt = "";
-				if($dateParts["hour"] < 12){
+				if($timeStartParts["hour"] < 12){
 					$timeAt = "morning";
 				}
-				else if($dateParts["hour"] < 17){
+				else if($timeStartParts["hour"] < 17){
 					$timeAt = "afternoon";
 				}
 				else{
 					$timeAt = "night";
 				}
+				$shift["Time_start"] = $timeStartParts["hour"] . 
+										":" . 
+										$timeStartParts["minute"];
+				$shift["Time_end"] = $timeEndParts["hour"] . 
+										":" . 
+										$timeEndParts["minute"];
 				$shift["timeAt"] = $timeAt;
 				array_push($shifts_details[$dayOfWeek], $shift);
+				// sort shifts
+				usort($shifts_details[$dayOfWeek], function ( $a, $b ) {
+				    return strtotime($a["Time_start"]) - strtotime($b["Time_start"]);
+				});
 			}
+
 			array_push($data, [
 				"DisplayName" => $employee->DisplayName, 
 				"Shifts" => $shifts_details,
 				]);
 		}
-		// print_r($data);
+		// Other schedule
+		$otherSchedule = Schedules::all()->toArray();
 		// render
-		View("ScheduleDetails", ["schedules" => $data, "scheduleInfo" => $scheduleInfo]);
+		View("ScheduleDetails", [
+			"schedules" => $data, 
+			"scheduleInfo" => $scheduleInfo,
+			"otherSchedule" => $otherSchedule
+			]);
 	}
 }
 ?>

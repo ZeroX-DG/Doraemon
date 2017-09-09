@@ -21,8 +21,7 @@ $router->mount('/shifts', function() use ($router){
 
 $router->mount('/schedules', function() use ($router){
 	$router->get('/all', 'ScheduleController@all');
-	$router->get('/', 'ScheduleController@all');
-	$router->get('/(\d+)/(\d+)', 'ScheduleController@findByUserId');
+	$router->get('/', 'ScheduleController@details');
 	$router->get('/(\d+)', 'ScheduleController@details');
 });
 
