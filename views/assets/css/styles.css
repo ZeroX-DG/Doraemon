@@ -20,6 +20,36 @@ div#mask{
   z-index:-1;
 }
 
+div#login-panel.container-fluid{
+  z-index:10;
+}
+
+div#form.col-md-6.col-md-offset-3{
+  z-index:100;
+}
+
+h1.text-center.text-success{
+  z-index:100;
+}
+
+h2.text-center{
+  color:#1c56b2;
+}
+
+h1.text-center.text-danger{
+}
+
+h1#title.text-center.text-danger{
+}
+
+label#lb_pass.control-label{
+  color:black;
+}
+
+label#lb_username.control-label{
+  color:black;
+}
+
 html{
   height:100%;
 }

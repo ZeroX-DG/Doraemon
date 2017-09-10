@@ -1,7 +1,7 @@
 <?php
 // Require composer autoloader
 require __DIR__ . '/vendor/autoload.php';
-// Illuminate database setting
+// database setting
 use Illuminate\Database\Capsule\Manager as Capsule;
 $capsule = new Capsule;
 $capsule->addConnection([
@@ -18,17 +18,28 @@ $capsule->addConnection([
 use Illuminate\Events\Dispatcher;
 use Illuminate\Container\Container;
 $capsule->setEventDispatcher(new Dispatcher(new Container));
-
 // Make this Capsule instance available globally via static methods
 $capsule->setAsGlobal();
-
 // Setup the Eloquent ORM
 $capsule->bootEloquent();
-// Folder stuff
-define('VIEW_FOLDER', dirname($_SERVER["SCRIPT_NAME"]).'/views/');
+// start session
+session_start();
+// constants
+require 'libs/constants.php';
 // Require view class
-use Jenssegers\Blade\Blade;
-$GLOBALS['blade'] = new Blade('views', 'cache');
+$GLOBALS['m'] = new Mustache_Engine(
+    array(
+        'loader' => new Mustache_Loader_FilesystemLoader(dirname(__FILE__).'/views'),
+        'partials_loader' => new Mustache_Loader_FilesystemLoader(dirname(__FILE__).'/views' . '/partials'),
+        'escape' => function($value) {
+            return htmlspecialchars($value, ENT_COMPAT, 'UTF-8');
+        },
+        'helpers' => [
+            "view_path" => VIEW_FOLDER,
+            "base_path" => MAIN_PATH
+        ]
+    )
+);
 // Require helpers
 require 'libs/Helpers.php';
 // Require models
