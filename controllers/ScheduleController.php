@@ -84,11 +84,14 @@ class ScheduleController{
 		}
 		// Other schedule
 		$otherSchedule = Schedules::all()->toArray();
+		// is admin
+		$isAdmin = $_SESSION["Role"] == ADMIN_ROLE;
 		// render
 		View("ScheduleDetails", [
 			"schedules" => $data, 
 			"scheduleInfo" => $scheduleInfo,
-			"otherSchedule" => $otherSchedule
+			"otherSchedule" => $otherSchedule,
+			"isAdmin" => $isAdmin
 			]);
 	}
 }
