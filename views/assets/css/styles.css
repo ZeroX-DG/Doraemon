@@ -1,12 +1,12 @@
 body#background{
-  background:url(../../assets/img/coffe2.jpg) no-repeat;
-  background-size:100% 120%;
+  background:url(../../assets/img/coffe3.jpg) no-repeat;
+  background-size:130% 140%;
   width:100%;
   height:100%;
 }
 
 h1#tbl_quanly.text-center{
-  color:#2980b9;
+  color:white;
   z-index:10000;
 }
 
