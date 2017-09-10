@@ -1,30 +1,8 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý Doraemon</title>
-    <link rel="stylesheet" href="{{view_path}}/assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{view_path}}/assets/css/styles.css">
-</head>
+{{> head}}
 
 <body id="background">
     <div id="mask"></div>
-    <nav class="navbar navbar-inverse navbar-static-top">
-        <div class="container-fluid">
-            <div class="navbar-header"><a class="navbar-brand navbar-link" href="#">Doraemon </a>
-                <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
-            </div>
-            <div class="collapse navbar-collapse" id="navcol-1">
-                <ul class="nav navbar-nav">
-                    <li class="active" role="presentation"><a href="#">Tính lương</a></li>
-                    <li role="presentation"><a href="#">Quản lý lịch làm việc</a></li>
-                    <li role="presentation"><a href="{{base_path}}/logout">Đăng xuất</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    {{> nav}}
     <div class="container">
         <h1 class="text-center" id="tbl_quanly">Quản lý Doraemon</h1>
         <div class="row">
@@ -32,9 +10,7 @@
                 <a class="btn btn-info btn-block btn-lg" role="button" href="#">Quản lý lịch làm việc</a>
             </div>
         </div>
-    </div>
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    </div>    
 </body>
 
-</html>
+{{> bottom}}
