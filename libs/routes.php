@@ -11,7 +11,11 @@ $router->get('/logout', function(){
 	redirect('/login');
 });
 
-$router->post('/checkWork', 'AttendanceController@doCheck');
+$router->mount('/attendance', function() use ($router){
+	$router->get('/', 'AttendanceController@Index');
+	$router->post('/', 'AttendanceController@takeAttendance');
+	$router->get('/list', 'AttendanceController@showList');
+});
 
 $router->mount('/shifts', function() use ($router){
 	$router->get('/all', 'ShiftController@all');
