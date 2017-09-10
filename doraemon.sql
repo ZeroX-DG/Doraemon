@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 08, 2017 at 06:22 PM
+-- Generation Time: Sep 10, 2017 at 06:28 PM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -23,14 +23,22 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `employee_attendance`
+-- Table structure for table `employee_attendances`
 --
 
-CREATE TABLE `employee_attendance` (
+CREATE TABLE `employee_attendances` (
   `UserId` int(11) NOT NULL,
-  `Date` datetime NOT NULL,
+  `Date` date NOT NULL,
+  `Time` time NOT NULL,
   `ShiftId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
+
+--
+-- Dumping data for table `employee_attendances`
+--
+
+INSERT INTO `employee_attendances` (`UserId`, `Date`, `Time`, `ShiftId`) VALUES
+(2, '2017-09-10', '12:45:30', 4);
 
 -- --------------------------------------------------------
 
@@ -62,7 +70,7 @@ CREATE TABLE `schedules` (
 --
 
 INSERT INTO `schedules` (`Id`, `Date_start`, `Date_end`, `Name`) VALUES
-(1, '2017-09-11', '2017-09-17', 'Tháng 8 tuần 1');
+(1, '2017-09-04', '2017-09-10', 'Tháng 8 tuần 1');
 
 -- --------------------------------------------------------
 
@@ -74,26 +82,19 @@ CREATE TABLE `schedule_details` (
   `Schedule_id` int(11) NOT NULL,
   `DayOfWeek` int(11) NOT NULL,
   `ShiftId` int(11) NOT NULL,
-  `UserId` int(11) NOT NULL
+  `UserId` int(11) NOT NULL,
+  `Date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
 
 --
 -- Dumping data for table `schedule_details`
 --
 
-INSERT INTO `schedule_details` (`Schedule_id`, `DayOfWeek`, `ShiftId`, `UserId`) VALUES
-(1, 2, 1, 1),
-(1, 2, 1, 2),
-(1, 3, 1, 2),
-(1, 2, 2, 2),
-(1, 3, 3, 2),
-(1, 4, 3, 3),
-(1, 6, 2, 3),
-(1, 7, 1, 1),
-(1, 5, 2, 2),
-(1, 5, 3, 2),
-(1, 8, 1, 3),
-(1, 7, 3, 3);
+INSERT INTO `schedule_details` (`Schedule_id`, `DayOfWeek`, `ShiftId`, `UserId`, `Date`) VALUES
+(1, 2, 2, 2, '2017-09-04'),
+(1, 3, 2, 2, '2017-09-05'),
+(1, 8, 1, 2, '2017-09-10'),
+(1, 8, 4, 2, '2017-09-10');
 
 -- --------------------------------------------------------
 
@@ -115,7 +116,8 @@ CREATE TABLE `shifts` (
 INSERT INTO `shifts` (`Id`, `Name`, `Time_start`, `Time_end`) VALUES
 (1, 'Ca sáng', '07:30:00', '12:00:00'),
 (2, 'Ca Chiều', '15:00:00', '18:00:00'),
-(3, 'Ca Tối', '18:00:00', '22:30:00');
+(3, 'Ca Tối', '18:00:00', '22:30:00'),
+(4, 'Ca trưa', '12:00:00', '15:00:00');
 
 -- --------------------------------------------------------
 
@@ -219,9 +221,9 @@ CREATE TABLE `wage_list` (
 --
 
 --
--- Indexes for table `employee_attendance`
+-- Indexes for table `employee_attendances`
 --
-ALTER TABLE `employee_attendance`
+ALTER TABLE `employee_attendances`
   ADD KEY `Fk_User_work_Id` (`UserId`),
   ADD KEY `Fk_Shift_work_Id` (`ShiftId`);
 
@@ -318,7 +320,7 @@ ALTER TABLE `schedules`
 -- AUTO_INCREMENT for table `shifts`
 --
 ALTER TABLE `shifts`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `storages`
 --
@@ -349,9 +351,9 @@ ALTER TABLE `wages`
 --
 
 --
--- Constraints for table `employee_attendance`
+-- Constraints for table `employee_attendances`
 --
-ALTER TABLE `employee_attendance`
+ALTER TABLE `employee_attendances`
   ADD CONSTRAINT `Fk_Shift_work_Id` FOREIGN KEY (`ShiftId`) REFERENCES `shifts` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `Fk_User_work_Id` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE;
 

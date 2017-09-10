@@ -21,14 +21,14 @@ class AttendanceController{
 										->get();
 		// get current time
 		date_default_timezone_set("Asia/Ho_Chi_Minh");		
-		$time = date('h:i:s');
+		$time = date('H:i:s');
 		$date = date('Y-m-d');
 		// compare to employee schedule
 		foreach($employeeSchedule as $schedule){
 			$shift = Shifts::find($schedule->ShiftId);
 			$timeStart = date($shift->Time_start);
 			$timeEnd = date($shift->Time_end);
-			if($timeStart <= $time && $timeEnd > $time){
+			if($timeStart <= $time && $timeEnd >= $time){
 				// check if user have already taken attendance
 				$attendance = Employee_Attendance::where('Date', '=', $date)
 													->where('ShiftId', '=', $shift->Id)
