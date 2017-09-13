@@ -1,8 +1,21 @@
 <div class="shift-panel {{ timeAt }}">
-	<div class="name text-center">
-		{{ Name }}
-	</div>
-	<div class="time text-center">
-		{{ Time_start }} - {{ Time_end }}
-	</div>
+	{{#isAdmin}}
+		<div class="name text-center">
+			{{ Name }}
+		</div>
+		<div class="time text-center">
+			{{ Time_start }} - {{ Time_end }}
+		</div>
+		<div class="text-center" style="font-size: 1.5em">
+			<i class="fa fa-trash" data-toggle="modal" data-target="#deleteModal" style="cursor: pointer" data-uid="{{Uid}}" data-date="{{Date}}" data-shiftId="{{ShiftId}}"></i>
+		</div>
+	{{/isAdmin}}
+	{{^isAdmin}}
+		<div class="name text-center">
+			{{ Name }}
+		</div>
+		<div class="time text-center">
+			{{ Time_start }} - {{ Time_end }}
+		</div>
+	{{/isAdmin}}
 </div>
