@@ -10,7 +10,7 @@
         <div class="col-md-12 text-center">
             <h3>{{ scheduleInfo.Name }}</h3>
         </div>
-        <div style="margin-left: 10px;">
+        <div style="margin-left: 10px; display: inline-flex;">
             <div class="dropdown">
                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                 Danh sách lịch&nbsp;
@@ -22,7 +22,9 @@
                     {{/otherSchedule}}
                 </ul>
             </div>
+            <button style="margin-left: 10px;" class="btn btn-info" data-toggle="modal" data-target="#addModal">Thêm lịch</button>
         </div>
+        <br>
         <br>
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
@@ -40,7 +42,7 @@
                 </thead>
                 <tbody>
                     {{#schedules}}
-                        <tr>
+                        <tr id="e{{Uid}}">
                             <td>{{DisplayName}}</td>
                             {{#Shifts}}
                                 <td>
@@ -83,6 +85,69 @@
                     {{/schedules}}
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div id="deleteModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Mày sủa không</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Mày có sủa không ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger deleteShift" data-dismiss="modal">Tao sủa</button>
+                    <button type="button" class="btn btn-info" data-dismiss="modal">Tao không sủa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="addModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Thêm ca làm</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="employees">Nhân viên</label>
+                        <select class="form-control" id="employees">
+                            {{#employees}}
+                                <option value={{Id}}>{{DisplayName}}</option>
+                            {{/employees}}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="shifts">Loại ca</label>
+                        <select class="form-control" id="shifts">
+                            {{#allShifts}}
+                                <option value={{Id}}>{{Name}} ({{Time_start}} - {{Time_end}})</option>
+                            {{/allShifts}}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dates">Ngày</label>
+                        <select class="form-control" id="dates">
+                            <option value="2">Thứ 2</option>
+                            <option value="3">Thứ 3</option>
+                            <option value="4">Thứ 4</option>
+                            <option value="5">Thứ 5</option>
+                            <option value="6">Thứ 6</option>
+                            <option value="7">Thứ 7</option>
+                            <option value="8">Chủ nhật</option>
+                        </select>
+                    </div>
+                    <input type="hidden" id="scheduleId" value="{{scheduleInfo.Id}}" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="addBtn" data-dismiss="modal">Thêm</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Thôi đéo</button>
+                </div>
+            </div>
         </div>
     </div>
 </body>
