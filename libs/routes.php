@@ -25,8 +25,11 @@ $router->mount('/shifts', function() use ($router){
 
 $router->mount('/schedules', function() use ($router){
 	$router->get('/all', 'ScheduleController@all');
+	$router->post('/delete', 'ScheduleController@deleteSchedule');
 	$router->get('/', 'ScheduleController@details');
+	$router->post('/', 'ScheduleController@addSchedule');
 	$router->get('/(\d+)', 'ScheduleController@details');
+	$router->post('/(\d+)', 'ScheduleController@addSchedule');
 	$router->post('/shift/delete', 'ScheduleController@deleteShift');
 	$router->post('/shift/add', 'ScheduleController@addShift');
 });

@@ -47,3 +47,7 @@ $("#addBtn").click(function(){
 			$(td).html($(td).html() + data);
 	});
 });
+$('.datepicker').datepicker({
+    format: 'yyyy-mm-dd',
+    startDate: '-3d'
+});

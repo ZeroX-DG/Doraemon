@@ -100,7 +100,7 @@ class ScheduleController{
 			"isAdmin" => $isAdmin,
 			"employees" => $employees,
 			"allShifts" => $allShifts,
-			]);
+		]);
 	}
 
 	public function deleteShift(){
@@ -160,6 +160,27 @@ class ScheduleController{
 			$html .= "</div>";
 			echo $html;
 		}		
+	}
+
+	public function addSchedule()
+	{
+		if($_SESSION['Role'] == ADMIN_ROLE){
+			$schedule = new Schedules;
+			$schedule->Name = $_POST['name'];
+			$schedule->Date_start = date($_POST['date_start']);
+			$schedule->Date_end = date($_POST['date_end']); 
+			$schedule->save();
+			redirect('/schedules');
+		}
+	}
+
+	public function deleteSchedule(){
+		if($_SESSION['Role'] == ADMIN_ROLE){
+			$id = $_POST['scheduleId'];
+			$schedule = Schedules::find($id);
+			$schedule->delete();
+			redirect('/schedules');
+		}
 	}
 }
 ?>

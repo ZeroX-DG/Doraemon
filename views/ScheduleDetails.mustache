@@ -22,7 +22,11 @@
                     {{/otherSchedule}}
                 </ul>
             </div>
-            <button style="margin-left: 10px;" class="btn btn-info" data-toggle="modal" data-target="#addModal">Thêm lịch</button>
+            {{#isAdmin}}
+            <button style="margin-left: 10px;" class="btn btn-info" data-toggle="modal" data-target="#addScheduleModal">Thêm lịch</button>
+            <button style="margin-left: 10px;" class="btn btn-info" data-toggle="modal" data-target="#addModal">Thêm ca làm</button>
+            <button style="margin-left: 10px;" class="btn btn-danger" data-toggle="modal" data-target="#deleteScheduleModal">Xóa lịch này</button>
+            {{/isAdmin}}
         </div>
         <br>
         <br>
@@ -102,6 +106,68 @@
                     <button type="button" class="btn btn-danger deleteShift" data-dismiss="modal">Tao sủa</button>
                     <button type="button" class="btn btn-info" data-dismiss="modal">Tao không sủa</button>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div id="deleteScheduleModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Cảnh báo !</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn xóa lịch này ?</p>
+                </div>
+                <form action="{{base_path}}/schedules/delete" method="post">
+                <div class="modal-footer">
+                    <input type="hidden" name="scheduleId" value="{{scheduleInfo.Id}}">
+                    <button type="submit" class="btn btn-danger">Xóa</button>
+                    <button type="button" class="btn btn-info" data-dismiss="modal">Thôi không xóa</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="addScheduleModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Thêm lịch làm việc</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        <div class="form-group">
+                            <label for="scheduleName">Tên lịch</label>
+                            <input type="text" class="form-control" name="name"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="scheduleStart">Ngày bắt đầu</label>
+                            <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+                                <input type="text" class="form-control" name="date_start">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="scheduleStart">Ngày kết thúc</label>
+                            <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+                                <input type="text" class="form-control" name="date_end">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Tao sủa</button>
+                    <button type="button" class="btn btn-info" data-dismiss="modal">Tao không sủa</button>
+                </div>
+                </form>
             </div>
         </div>
     </div>
