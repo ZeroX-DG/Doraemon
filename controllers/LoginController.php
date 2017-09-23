@@ -16,9 +16,11 @@ class LoginController{
 		if(count($foundUser) == 1){
 			// correct 
 			$userRole = $foundUser[0]->Role;
+			$userId = $foundUser[0]->Id;
 			// set session
 			$_SESSION['UserName'] = $userName;
 			$_SESSION['Role'] = $userRole;
+			$_SESSION['Uid'] = $userId;
 			// redirect to index page
 			redirect('/');
 		}
