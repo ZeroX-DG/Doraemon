@@ -14,15 +14,22 @@ class AttendanceController{
 		$userId = $_SESSION['Uid'];
 		$dayOfWeekStr = date('w');
 		$dayOfWeek = $dayOfWeekStr == '0' ? 8 : $dayOfWeekStr + 1;
+		// get current time
+		date_default_timezone_set("Asia/Ho_Chi_Minh");		
+		$time = date('H:i:s');
+		$date = date('Y-m-d');
+		if(
+			$scheduleInfo->Date_start >= $date && 
+			$scheduleInfo->Date_end <= $date
+		){
+			return View("EmployeeAttendance");
+		}
 		$employeeSchedule = Schedules::find($scheduleInfo->Id)
 										->details()
 										->where('userId', '=', $userId)
 										->where('dayOfWeek', '=', $dayOfWeek)
 										->get();
-		// get current time
-		date_default_timezone_set("Asia/Ho_Chi_Minh");		
-		$time = date('H:i:s');
-		$date = date('Y-m-d');
+		
 		// check for IP match
 		$attendanceIP = Employee_Attendance::where('IP', '=', get_client_ip())
 										->first();
@@ -36,14 +43,14 @@ class AttendanceController{
 				"Message" => "Không được điểm danh hộ !", 
 				"hasMessage" => true,
 				"MessageType" => "danger"
-				]);
+			]);
 		}
 		// compare to employee schedule
+		date_default_timezone_set("Asia/Ho_Chi_Minh");
 		foreach($employeeSchedule as $schedule){
 			$shift = Shifts::find($schedule->ShiftId);
 			$timeStart = date($shift->Time_start);
 			$timeEnd = date($shift->Time_end);
-
 			if($timeStart <= $time && $timeEnd >= $time){
 				// check if user have already taken attendance
 				$attendance = Employee_Attendance::where('Date', '=', $date)
@@ -99,7 +106,7 @@ class AttendanceController{
 		return View("EmployeeAttendanceList", [
 			"attendances" => $data,
 			"DisplayName" => $displayname
-			]);
+		]);
 	}
 }
 ?>																																										

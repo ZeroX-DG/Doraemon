@@ -6,5 +6,7 @@ class Schedules extends Eloquent {
 	public function details(){
 		return $this->hasMany('Model\Schedule_details', 'Schedule_id');
 	}
+	protected $fillable = ["Date_start", "Date_end", "Name"];
+	public $timestamps = false;
 }
 ?>
