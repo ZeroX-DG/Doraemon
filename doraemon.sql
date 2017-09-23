@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 10, 2017 at 06:28 PM
+-- Generation Time: Sep 23, 2017 at 03:49 AM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -30,15 +30,17 @@ CREATE TABLE `employee_attendances` (
   `UserId` int(11) NOT NULL,
   `Date` date NOT NULL,
   `Time` time NOT NULL,
-  `ShiftId` int(11) NOT NULL
+  `ShiftId` int(11) NOT NULL,
+  `IP` varchar(50) COLLATE utf8_vietnamese_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
 
 --
 -- Dumping data for table `employee_attendances`
 --
 
-INSERT INTO `employee_attendances` (`UserId`, `Date`, `Time`, `ShiftId`) VALUES
-(2, '2017-09-10', '12:45:30', 4);
+INSERT INTO `employee_attendances` (`UserId`, `Date`, `Time`, `ShiftId`, `IP`) VALUES
+(2, '2017-09-11', '09:08:48', 1, '::1'),
+(2, '2017-09-18', '22:16:35', 3, '::1');
 
 -- --------------------------------------------------------
 
@@ -70,7 +72,9 @@ CREATE TABLE `schedules` (
 --
 
 INSERT INTO `schedules` (`Id`, `Date_start`, `Date_end`, `Name`) VALUES
-(1, '2017-09-04', '2017-09-10', 'Tháng 8 tuần 1');
+(1, '2017-09-04', '2017-09-10', 'Tháng 8 tuần 1'),
+(2, '2017-09-11', '2017-09-17', 'Tháng 9'),
+(5, '2017-09-18', '2017-09-24', 'Tháng 9 tuần cuối');
 
 -- --------------------------------------------------------
 
@@ -94,7 +98,13 @@ INSERT INTO `schedule_details` (`Schedule_id`, `DayOfWeek`, `ShiftId`, `UserId`,
 (1, 2, 2, 2, '2017-09-04'),
 (1, 3, 2, 2, '2017-09-05'),
 (1, 8, 1, 2, '2017-09-10'),
-(1, 8, 4, 2, '2017-09-10');
+(2, 2, 3, 2, '2017-09-13'),
+(2, 2, 1, 3, '2017-09-13'),
+(2, 2, 3, 3, '2017-09-13'),
+(2, 4, 1, 2, '2017-09-15'),
+(2, 6, 3, 2, '2017-09-17'),
+(2, 4, 4, 2, '2017-09-15'),
+(5, 2, 3, 2, '2017-09-20');
 
 -- --------------------------------------------------------
 
@@ -117,7 +127,9 @@ INSERT INTO `shifts` (`Id`, `Name`, `Time_start`, `Time_end`) VALUES
 (1, 'Ca sáng', '07:30:00', '12:00:00'),
 (2, 'Ca Chiều', '15:00:00', '18:00:00'),
 (3, 'Ca Tối', '18:00:00', '22:30:00'),
-(4, 'Ca trưa', '12:00:00', '15:00:00');
+(4, 'Ca trưa', '12:00:00', '15:00:00'),
+(5, 'Ca khuya (bóc lột hehe)', '21:00:00', '04:00:00'),
+(6, 'Ca khuya', '00:20:00', '00:40:00');
 
 -- --------------------------------------------------------
 
@@ -315,12 +327,12 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `schedules`
 --
 ALTER TABLE `schedules`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `shifts`
 --
 ALTER TABLE `shifts`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `storages`
 --
