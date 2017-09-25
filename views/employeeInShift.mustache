@@ -1,0 +1,30 @@
+{{> head}}
+<body>
+    {{#isAdmin}}
+        {{> AdminNav}}
+    {{/isAdmin}}
+    {{^isAdmin}}
+        {{> EmployeeNav}}
+    {{/isAdmin}}
+    <h1>Danh sách các nhân viên làm {{shiftName}} trong lịch {{ScheduleName}}</h1>
+    <br>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hovered">
+            <thead>
+                <tr>
+                    <th>Tên nhân viên</th>
+                    <th>Ngày trong tuần</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#employees}}
+                <tr>
+                    <td>{{empName}}</td>
+                    <td>{{dateOfWeek}}</td>
+                </tr>
+                {{/employees}}
+            </tbody>
+        </table>
+    </div>
+</body>
+{{> bottom}}

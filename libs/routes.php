@@ -26,12 +26,14 @@ $router->mount('/shifts', function() use ($router){
 $router->mount('/schedules', function() use ($router){
 	$router->get('/all', 'ScheduleController@all');
 	$router->post('/delete', 'ScheduleController@deleteSchedule');
+	$router->post('/edit', 'ScheduleController@editScheduleName');
 	$router->get('/', 'ScheduleController@details');
 	$router->post('/', 'ScheduleController@addSchedule');
 	$router->get('/(\d+)', 'ScheduleController@details');
 	$router->post('/(\d+)', 'ScheduleController@addSchedule');
-	$router->post('/shift/delete', 'ScheduleController@deleteShift');
-	$router->post('/shift/add', 'ScheduleController@addShift');
+	$router->post('/shift/delete', 'ShiftController@deleteShift');
+	$router->post('/shift/add', 'ShiftController@addShift');
+	$router->get('/shift/find/(\d+)/(\d+)', 'ShiftController@find');
 });
 
 $router->before('GET', '/.*', function(){

@@ -25,7 +25,9 @@
             {{#isAdmin}}
             <button style="margin-left: 10px;" class="btn btn-info" data-toggle="modal" data-target="#addScheduleModal">Thêm lịch</button>
             <button style="margin-left: 10px;" class="btn btn-info" data-toggle="modal" data-target="#addModal">Thêm ca làm</button>
+            <button style="margin-left: 10px;" class="btn btn-info" data-toggle="modal" data-target="#editScheduleModal">Sửa tên lịch này</button>
             <button style="margin-left: 10px;" class="btn btn-danger" data-toggle="modal" data-target="#deleteScheduleModal">Xóa lịch này</button>
+            
             {{/isAdmin}}
         </div>
         <br>
@@ -152,20 +154,34 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="scheduleStart">Ngày kết thúc</label>
-                            <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
-                                <input type="text" class="form-control" name="date_end">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
-                                </div>
-                            </div>
-                        </div>
-                    
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-danger">Tao sủa</button>
                     <button type="button" class="btn btn-info" data-dismiss="modal">Tao không sủa</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="editScheduleModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Sửa tên lịch làm việc</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{{base_path}}/schedules/edit">
+                        <div class="form-group">
+                            <label for="scheduleName">Tên lịch</label>
+                            <input type="text" class="form-control" name="name"/>
+                            <input type="hidden" name="scheduleId" value="{{scheduleInfo.Id}}">
+                        </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Thôi không lưu</button>
+                    <button type="submit" class="btn btn-info">Lưu</button>
                 </div>
                 </form>
             </div>
