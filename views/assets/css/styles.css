@@ -1,3 +1,6 @@
+html{
+  height: 100%;
+}
 span#label_name.label.label-default{
   display:inline-block;
   max-width:100%;
@@ -14,6 +17,11 @@ h1#tbl_taonhanvien.text-center{
 
 body#background{
   background:url(../../assets/img/emp.jpg) no-repeat;
+  background-size:cover;
+}
+
+body#background2{
+  background:url(../../assets/img/coffe3.jpg) no-repeat;
   background-size:cover;
 }
 

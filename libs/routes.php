@@ -34,6 +34,10 @@ $router->mount('/schedules', function() use ($router){
 	$router->post('/shift/add', 'ScheduleController@addShift');
 });
 
+$router->mount('/account', function() use ($router){
+	$router->get('/add', 'AccountController@Index');
+});
+
 $router->before('GET', '/.*', function(){
 	if(!isset($_SESSION['UserName']) &&
 		!isset($_SESSION['Role']) &&
