@@ -1,0 +1,48 @@
+{{> head}}
+<body id="background">
+    {{#isAdmin}}
+        {{> AdminNav}}
+    {{/isAdmin}}
+    {{^isAdmin}}
+        {{> EmployeeNav}}
+    {{/isAdmin}}
+    <div id="mask"></div>
+    <div class="container">
+        <div class="col-md-6 col-md-offset-3" id="form">
+            <h1 class="text-center" id="tbl_taonhanvien">Tạo nhân viên mới</h1>
+            {{#hasError}}
+            <div class="alert alert-danger">
+                <strong>Lỗi !</strong> 
+                {{error}}
+            </div>
+            {{/hasError}}
+            {{#hasMes}}
+            <div class="alert alert-info">
+                
+                {{mess}}
+            </div>
+            {{/hasMes}}
+            <form class="bootstrap-form-with-validation" method="post">
+                <div class="form-group">
+                    <label class="control-label" for="text-input" id="lb_username">Tên đăng nhập</label>
+                    <input class="form-control" name="name" type="text" name="text-input" id="text-input">
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="text-input" id="lb_username">Tên hiển thị</label>
+                    <input class="form-control" name="username" type="text" name="text-input" id="text-input">
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="password-input" id="lb_pass">Mật khẩu</label>
+                    <input class="form-control" name="pass" type="password" name="password-input" id="password-input">
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="password-input" id="lb_pass">Nhập lại mật khẩu</label>
+                    <input class="form-control" name="repass" type="password" name="password-input" id="password-input">
+                </div>
+                <button class="btn btn-primary btn-lg" name="btnsubmit" type="submit" id="btn_add">Tạo mới </button>
+            </form>
+            
+        </div>
+    </div>
+</body>
+{{> bottom}}

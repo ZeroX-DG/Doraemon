@@ -43,6 +43,14 @@ $router->mount('/schedules', function() use ($router){
 	$router->get('/shift/find/(\d+)/(\d+)/(\d+)', 'ShiftController@find');
 });
 
+$router->mount('/account', function() use ($router){
+	$router->get('/', 'AccountController@Index');
+	$router->get('/add', 'AccountController@Add');
+	$router->post('/add', 'AccountController@AddNewEmployee');
+	$router->get('/edit/(\d+)', 'AccountController@Edit');
+	$router->post('/edit/(\d+)', 'AccountController@EditAccountmanagement');
+});
+
 $router->before('GET', '/.*', function(){
 	if(!isset($_SESSION['UserName']) &&
 		!isset($_SESSION['Role']) &&
