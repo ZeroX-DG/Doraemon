@@ -47,6 +47,58 @@ $("#addBtn").click(function(){
 			$(td).html($(td).html() + data);
 	});
 });
+
+$(".checkBtn").click(function(e){
+	var date = e.target.dataset["date"];
+	var uid = e.target.dataset["uid"];
+	var shiftId = e.target.dataset["shiftid"];
+	var button = $(this);
+	var text = $(button.parent().parent().children()[2]);
+	$.ajax({
+		method: "POST",
+		url: document.location.href,
+		data: { date: date, Uid: uid, ShiftId: shiftId }
+	}).done(function() {
+		
+		var isCheck = button.hasClass("btn-info");
+		if(isCheck){
+			button.removeClass("btn-info");
+			button.addClass("btn-danger");
+			button.html("Bỏ chấm");
+			text.html("đã chấm");
+		}
+		else{
+			button.removeClass("btn-danger");
+			button.addClass("btn-info");	
+			button.html("Chấm");
+			text.html("chưa chấm");
+		}
+	});
+});
+var el;
+$(".shiftDelBtn").click(function(e){
+	var id = $(this).data("id");
+	var button = $(this);
+	$.ajax({
+		method: "POST",
+		url: document.location.href + '/delete',
+		data: { id: id }
+	}).done(function(mes) {
+		if(mes == "done"){
+			el.parent().parent().remove();
+		}
+		else{
+			$("#cannotdelete").modal();
+		}
+	});
+});
+$("#deleteShiftModal").on('show.bs.modal', function (e) {
+	var id = $(e.relatedTarget).data("id");
+	$(this).find(".shiftDelBtn").data("id", id);
+	el = $(e.relatedTarget);
+});
+
+
 $('.datepicker').datepicker({
     format: 'yyyy-mm-dd',
     startDate: '-3d'

@@ -15,12 +15,19 @@ $router->mount('/attendance', function() use ($router){
 	$router->get('/', 'AttendanceController@Index');
 	$router->post('/', 'AttendanceController@takeAttendance');
 	$router->get('/list', 'AttendanceController@showList');
+	$router->get('/all', 'AttendanceController@listAll');
+	$router->get('/listSchedules', 'AttendanceController@viewAttendanceSchedules');
+	$router->get('/scheduleDetails/(\d+)/(\d+)', 'AttendanceController@viewScheduleDetails');
+	$router->post('/scheduleDetails/(\d+)/(\d+)', 'AttendanceController@adminTakeAttendance');
 });
 
 $router->mount('/shifts', function() use ($router){
-	$router->get('/all', 'ShiftController@all');
-	$router->get('/', 'ShiftController@all');
+	$router->get('/all', 'ShiftController@Index');
+	$router->get('/', 'ShiftController@Index');
+	$router->post('/delete', 'ShiftController@deleteShift');
+	$router->get('/edit/(\d+)', 'ShiftController@viewEditShift');
 	$router->get('/(\d+)', 'ShiftController@find');
+	$router->post('/edit/(\d+)', 'ShiftController@EditShift');
 });
 
 $router->mount('/schedules', function() use ($router){
@@ -31,9 +38,9 @@ $router->mount('/schedules', function() use ($router){
 	$router->post('/', 'ScheduleController@addSchedule');
 	$router->get('/(\d+)', 'ScheduleController@details');
 	$router->post('/(\d+)', 'ScheduleController@addSchedule');
-	$router->post('/shift/delete', 'ShiftController@deleteShift');
-	$router->post('/shift/add', 'ShiftController@addShift');
-	$router->get('/shift/find/(\d+)/(\d+)', 'ShiftController@find');
+	$router->post('/shift/delete', 'ShiftController@deleteShiftFromSchedule');
+	$router->post('/shift/add', 'ShiftController@addShiftToSchedule');
+	$router->get('/shift/find/(\d+)/(\d+)/(\d+)', 'ShiftController@find');
 });
 
 $router->before('GET', '/.*', function(){

@@ -73,6 +73,7 @@ class ScheduleController{
 				$shift["timeAt"] = $timeAt;
 				$shift["ShiftId"] = $schedule["ShiftId"];
 				$shift["Date"] = $schedule["Date"];
+				$shift["DayOfWeek"] = $schedule["DayOfWeek"];
 				array_push($shifts_details[$dayOfWeek], $shift);
 				// sort shifts
 				usort($shifts_details[$dayOfWeek], function ( $a, $b ) {

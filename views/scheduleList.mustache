@@ -1,0 +1,36 @@
+{{> head}}
+<body>
+    {{#isAdmin}}
+        {{> AdminNav}}
+    {{/isAdmin}}
+    {{^isAdmin}}
+        {{> EmployeeNav}}
+    {{/isAdmin}}
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">Chấm công nhân viên</h1></div>
+        <div class="col-md-8 col-md-offset-2">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Tên lịch</th>
+                            <th>Thời gian</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#schedules}}
+                        <tr>
+                            <td>{{name}}</td>
+                            <td>{{duration}}</td>
+                            <td> <a class="btn btn-success" role="button" href="{{base_path}}/attendance/scheduleDetails/{{id}}/2">Xem chấm công</a></td>
+                        </tr>
+                        {{/schedules}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+{{> bottom}}

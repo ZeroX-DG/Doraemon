@@ -25,7 +25,10 @@ class LoginController{
 			redirect('/');
 		}
 		else{
-			return View("login", ["error" => "Sai tên đăng nhập hoặc mật khẩu", "hasError" => true]);
+			return View("login", [
+				"error" => "Sai tên đăng nhập hoặc mật khẩu", 
+				"hasError" => true
+			]);
 		}
 	}
 }

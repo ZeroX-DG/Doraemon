@@ -1,8 +1,11 @@
 {{> head}}
-
 <body id="background">
-    <div id="mask"></div>
-    {{> AdminNav}}
+    {{#isAdmin}}
+        {{> AdminNav}}
+    {{/isAdmin}}
+    {{^isAdmin}}
+        {{> EmployeeNav}}
+    {{/isAdmin}}
     <div class="container">
         <h1 class="text-center" id="tbl_quanly">Quản lý Doraemon</h1>
         <div class="row">

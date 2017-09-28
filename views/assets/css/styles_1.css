@@ -1,0 +1,22 @@
+
+
+.shift-panel{
+	box-sizing: border-box;
+	border-radius: 5px;
+	padding: 10px 0px;
+}
+
+.shift-panel.night{
+	background-color: #34495e;
+	color: white;
+}
+
+.shift-panel.afternoon{
+	background-color: #f39c12;
+	color: black;
+}
+
+.shift-panel.morning{
+	background-color: #3498db;
+	color: white;
+}

@@ -1,7 +1,11 @@
 {{> head}}
-
 <body>
-    {{> EmployeeNav}}
+    {{#isAdmin}}
+        {{> AdminNav}}
+    {{/isAdmin}}
+    {{^isAdmin}}
+        {{> EmployeeNav}}
+    {{/isAdmin}}
     <div class="container">
     	<h3>Lịch sử chấm công</h3>
     	<h3>Nhân viên: {{DisplayName}}</h3>

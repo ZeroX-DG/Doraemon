@@ -4,31 +4,32 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Account</title>
+    <title>editShift</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 
-<body id="background">
-    <div id="mask"></div>
-    <div class="container">
-        <div class="col-md-6 col-md-offset-3" id="form">
-            <h1 class="text-center" id="tbl_taonhanvien">Tạo nhân viên mới</h1>
+<body>
+    <h1 class="text-center">Chỉnh sửa ca</h1>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
             <form class="bootstrap-form-with-validation">
                 <div class="form-group">
-                    <label class="control-label" for="text-input" id="lb_username">Tên đăng nhập</label>
+                    <label class="control-label" for="text-input">Tên ca</label>
                     <input class="form-control" type="text" name="text-input" id="text-input">
                 </div>
                 <div class="form-group">
-                    <label class="control-label" for="password-input" id="lb_pass">Mật khẩu</label>
+                    <label class="control-label" for="password-input">Giờ bắt đầu</label>
                     <input class="form-control" type="password" name="password-input" id="password-input">
                 </div>
                 <div class="form-group">
-                    <label class="control-label" for="password-input" id="lb_pass">Nhập lại mật khẩu</label>
-                    <input class="form-control" type="password" name="password-input" id="password-input">
+                    <label class="control-label" for="email-input">Giờ kết thúc</label>
+                    <input class="form-control" type="email" name="email-input" id="email-input">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success" type="submit">Lưu </button>
                 </div>
             </form>
-            <button class="btn btn-primary btn-lg" type="submit" id="btn_add">Tạo mới </button>
         </div>
     </div>
     <script src="assets/js/jquery.min.js"></script>

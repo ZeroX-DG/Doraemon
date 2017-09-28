@@ -1,7 +1,11 @@
 {{> head}}
-
 <body>
-    {{> EmployeeNav}}
+    {{#isAdmin}}
+        {{> AdminNav}}
+    {{/isAdmin}}
+    {{^isAdmin}}
+        {{> EmployeeNav}}
+    {{/isAdmin}}
     <div class="container">
         <h1 class="text-center" id="tbl_quanly">Chấm công</h1>
         <div class="row">

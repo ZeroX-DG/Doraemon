@@ -1,0 +1,36 @@
+{{> head}}
+
+<body>
+    {{#isAdmin}}
+        {{> AdminNav}}
+    {{/isAdmin}}
+    {{^isAdmin}}
+        {{> EmployeeNav}}
+    {{/isAdmin}}
+    <h3>Lịch sử chấm công các nhân viên</h3>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Tên nhân viên</th>
+                    <th>Ngày chấm công</th>
+                    <th>Thời gian chấm</th>
+                    <th>Tên ca</th>
+                    <th>Thời gian ca</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#attendances}}
+                <tr>
+                    <td>{{DisplayName}}</td>
+                    <td>{{Date}}</td>
+                    <td>{{Time}}</td>
+                    <td>{{ShiftName}}</td>
+                    <td>{{ShiftTime}}</td>
+                </tr>
+                {{/attendances}}
+            </tbody>
+        </table>
+    </div>
+</body>
+{{> bottom}}

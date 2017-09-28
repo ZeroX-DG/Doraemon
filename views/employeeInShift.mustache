@@ -6,21 +6,27 @@
     {{^isAdmin}}
         {{> EmployeeNav}}
     {{/isAdmin}}
-    <h1>Danh sách các nhân viên làm {{shiftName}} trong lịch {{ScheduleName}}</h1>
+    <h3>
+    Ca: {{shiftName}} ({{shiftStartTime}} -> {{shiftEndTime}})
+    </h3>
+    <h3>
+    Lịch: {{ScheduleName}}
+    </h3>
+    <h3>
+    Ngày: {{dayOfWeek}} ({{date}})
+    </h3>
     <br>
     <div class="table-responsive">
-        <table class="table table-bordered table-hovered">
+        <table class="table table-bordered table-hover">
             <thead>
                 <tr>
-                    <th>Tên nhân viên</th>
-                    <th>Ngày trong tuần</th>
+                    <th class="text-center">Tên nhân viên</th>
                 </tr>
             </thead>
             <tbody>
                 {{#employees}}
                 <tr>
-                    <td>{{empName}}</td>
-                    <td>{{dateOfWeek}}</td>
+                    <td class="text-center">{{empName}}</td>
                 </tr>
                 {{/employees}}
             </tbody>

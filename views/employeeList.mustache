@@ -1,0 +1,60 @@
+{{> head}}
+<body>
+    {{#isAdmin}}
+        {{> AdminNav}}
+    {{/isAdmin}}
+    {{^isAdmin}}
+        {{> EmployeeNav}}
+    {{/isAdmin}}
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">Chấm công nhân viên</h1>
+            <h1 class="text-center">Lịch: {{scheduleInfo.Name}}</h1>
+            <h1 class="text-center">Ngày: {{strDayOfWeek}}</h1>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                Các ngày&nbsp;
+                <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    {{#dayOfWeek}}
+                        <li><a href="{{base_path}}/attendance/scheduleDetails/{{scheduleInfo.Id}}/{{day.asNumber}}">{{day.asWord}}</a></li>
+                    {{/dayOfWeek}}
+                </ul>
+            </div>
+            <br>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Tên nhân viên</th>
+                            <th>Tên ca</th>
+                            <th>Tình trạng</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#employees}}
+                        <tr>
+                            <td>{{user.DisplayName}}</td>
+                            <td>{{shift.Name}}</td>
+                            <td><span id="status">{{condition}}</span></td>
+                            <td>
+                                {{#checked}}
+                                <button class="btn btn-danger checkBtn" id="uncheckAttendance" data-date="{{currentDate}}" data-uid="{{user.Id}}" data-shiftid="{{shift.Id}}">Bỏ chấm</button>
+                                {{/checked}}
+                                {{^checked}}
+                                <button class="btn btn-info checkBtn" id="checkAttendance" data-date="{{currentDate}}" data-uid="{{user.Id}}" data-shiftid="{{shift.Id}}">Chấm</button>
+                                {{/checked}}
+                            </td>
+                        </tr>
+                        {{/employees}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+{{> bottom}}
