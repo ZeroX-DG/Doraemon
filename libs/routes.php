@@ -35,7 +35,11 @@ $router->mount('/schedules', function() use ($router){
 });
 
 $router->mount('/account', function() use ($router){
-	$router->get('/add', 'AccountController@Index');
+	$router->get('/', 'AccountController@Index');
+	$router->get('/add', 'AccountController@Add');
+	$router->post('/add', 'AccountController@AddNewEmployee');
+	$router->get('/edit/(\d+)', 'AccountController@Edit');
+	$router->post('/edit/(\d+)', 'AccountController@EditAccountmanagement');
 });
 
 $router->before('GET', '/.*', function(){

@@ -1,0 +1,40 @@
+{{> head}}
+<body>
+    {{#isAdmin}}
+        {{> AdminNav}}
+    {{/isAdmin}}
+    {{^isAdmin}}
+        {{> EmployeeNav}}
+    {{/isAdmin}}
+    <div class="row">
+        <div class="col-md-12 col-md-offset-0">
+            <h1 class="text-center">Quản lý tài khoản</h1></div>
+        <div class="col-md-12"><a class="btn btn-success" role="button" href="{{base_path}}/account/add">Thêm tài khoản</a></div>
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Tên Đăng Nhập</th>
+                            <th>Tên hiển thị</th>
+                            <th>Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#employee}}
+                        <tr>
+                            <td>{{UserName}}</td>
+                            <td>{{DisplayName}}</td>
+                            <td>
+                                <a class="btn btn-success" name="btnfix" type="button" href="{{base_path}}/account/edit/{{Id}}">Sửa </a>
+                                <button class="btn btn-danger" name="btndelete"type="button">Xóa </button>
+                            </td>
+                        </tr>
+                        {{/employee}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+{{> bottom}}
