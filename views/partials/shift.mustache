@@ -26,5 +26,10 @@
 		<div class="time text-center">
 			{{ Time_start }} - {{ Time_end }}
 		</div>
+		<div class="text-center" style="font-size: 1.5em">
+			<a href="{{base_path}}/schedules/shift/find/{{scheduleInfo.Id}}/{{ShiftId}}/{{DayOfWeek}}" style="color: inherit;">
+				<i class="fa fa-list" style="cursor: pointer; color: inherit;"></i>
+			</a>
+		</div>
 	{{/isAdmin}}
 </div>
