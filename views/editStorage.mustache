@@ -1,0 +1,19 @@
+{{> head}}
+<body>
+    {{> AdminNav}}
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <form class="bootstrap-form-with-validation" method="post">
+                <h2 class="text-center">Sửa kho</h2>
+                <div class="form-group">
+                    <label class="control-label" for="text-input">Sửa kho</label>
+                    <input class="form-control" type="text" name="name" value="{{name}}" id="text-input">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit">Lưu </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+{{> bottom}}

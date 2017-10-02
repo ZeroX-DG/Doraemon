@@ -28,6 +28,8 @@ $router->mount('/shifts', function() use ($router){
 	$router->get('/edit/(\d+)', 'ShiftController@viewEditShift');
 	$router->get('/(\d+)', 'ShiftController@find');
 	$router->post('/edit/(\d+)', 'ShiftController@EditShift');
+	$router->get('/add', 'ShiftController@viewAddShift');
+	$router->post('/add', 'ShiftController@AddShift');
 });
 
 $router->mount('/schedules', function() use ($router){
@@ -49,6 +51,29 @@ $router->mount('/account', function() use ($router){
 	$router->post('/add', 'AccountController@AddNewEmployee');
 	$router->get('/edit/(\d+)', 'AccountController@Edit');
 	$router->post('/edit/(\d+)', 'AccountController@EditAccountmanagement');
+	$router->post('/delete', 'AccountController@DeleteAccount');
+});
+
+$router->mount('/storage', function() use ($router){
+	$router->get('/', 'StorageController@Index');
+	$router->get('/(\d+)', 'StorageController@ShowContent');
+	$router->post('/(\d+)/delete', 'StorageController@deleteProduct');
+	$router->get('/(\d+)/add', 'StorageController@viewAddProduct');
+	$router->post('/(\d+)/add', 'StorageController@addProduct');
+	$router->get('/(\d+)/edit/(\d+)', 'StorageController@viewEditProduct');
+	$router->post('/(\d+)/edit/(\d+)', 'StorageController@EditProduct');
+	$router->post('/delete', 'StorageController@deleteStorage');
+	$router->get('/add', 'StorageController@viewAddStorage');
+	$router->post('/add', 'StorageController@AddStorage');
+	$router->get('/(\d+)/edit', 'StorageController@ViewEditStorage');
+	$router->post('/(\d+)/edit', 'StorageController@EditStorage');
+	$router->post('/(\d+)', 'StorageController@importAndExportProduct');
+});
+
+$router->get('/storageHistory', 'StorageController@history');
+
+$router->mount("/salary", function() use ($router){
+	$router->get("/", 'SalaryController@Index');
 });
 
 $router->before('GET', '/.*', function(){

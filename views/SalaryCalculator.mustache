@@ -1,0 +1,45 @@
+{{> head}}
+<body>
+    {{#isAdmin}}
+        {{> AdminNav}}
+    {{/isAdmin}}
+    {{^isAdmin}}
+        {{> EmployeeNav}}
+    {{/isAdmin}}
+    <h1>Tính lương nhân viên</h1>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nhân viên</th>
+                    <th>lương </th>
+                    <th>Số giờ công</th>
+                    <th>Thưởng</th>
+                    <th>Tạm ứng</th>
+                    <th>Tổng</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#employees}}
+                <tr>
+                    <td>{{DisplayName}}</td>
+                    <td>
+                        <input type="number" class="salaryByHour" onkeyup="oneDot(this)">
+                    </td>
+                    <td class="AttendanceHour">{{AttendanceHour}}</td>
+                    <td>
+                        <input type="number" class="bonusSalary" onkeyup="oneDot(this)">
+                    </td>
+                    <td>
+                        <input type="number" class="cashAdvance" onkeyup="oneDot(this)">
+                    </td>
+                    <td class="totalSalary">
+                        0
+                    </td>
+                </tr>
+                {{/employees}}
+            </tbody>
+        </table>
+    </div>
+</body>
+{{> bottom}}

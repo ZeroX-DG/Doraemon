@@ -11,10 +11,14 @@ class ShiftController{
 	}
 
 	public function deleteShift(){
+		header("application/json");
 		$id = $_POST['id'];
 		if($_SESSION['Role'] == ADMIN_ROLE){
-			Shifts::find($id)->delete();
-			echo "done";
+			$s = Shifts::find($id)->delete();
+			if($s)
+				echo trim("done");
+			else
+				echo "bug";
 		}
 	}
 
@@ -28,6 +32,22 @@ class ShiftController{
 		$start = date("H:i", strtotime($_POST["time_start"]));
 		$end = date("H:i", strtotime($_POST["time_end"]));
 		$shift = Shifts::find($id);
+		$shift->Name = $name;
+		$shift->Time_start = $start;
+		$shift->Time_end = $end;
+		$shift->save();
+		return redirect("/shifts");
+	}
+
+	public function viewAddShift(){
+		return View("addShift", ["isAdmin" => true]);
+	}
+
+	public function AddShift(){
+		$name = $_POST["name"];
+		$start = date("H:i", strtotime($_POST["time_start"]));
+		$end = date("H:i", strtotime($_POST["time_end"]));
+		$shift = new Shifts;
 		$shift->Name = $name;
 		$shift->Time_start = $start;
 		$shift->Time_end = $end;

@@ -1,0 +1,130 @@
+{{> head}}
+<body>
+    {{#isAdmin}}
+        {{> AdminNav}}
+    {{/isAdmin}}
+    {{^isAdmin}}
+        {{> EmployeeNav}}
+    {{/isAdmin}}
+    <h3 class="text-center">Quản lý kho</h3>
+    <a class="btn btn-info" href="{{base_path}}/storage/{{storageId}}/add">Thêm sản phẩm</a><br><br>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#content}}
+                <tr>
+                    <td>{{ProductName}}</td>
+                    <td>{{Amount}}</td>
+                    <td>
+                        <button class="btn btn-success exportBtn" type="button" data-target="#exportProductModal" data-toggle="modal" data-id="{{ProductId}}">Xuất </button>
+                        &nbsp;&nbsp;
+                        <button class="btn btn-info importBtn" type="button" data-target="#importProductModal" data-toggle="modal" data-id="{{ProductId}}">Nhập </button>
+                        &nbsp;&nbsp;
+                        <button class="btn btn-danger" data-target="#deleteProductModal" data-toggle="modal" data-id="{{Id}}" type="button">Xóa </button>
+                        &nbsp;&nbsp;
+                        <a href="{{base_path}}/storage/{{storageId}}/edit/{{ProductId}}" class="btn btn-info">
+                            Sửa
+                        </a>
+                    </td>
+                </tr>
+                {{/content}}
+            </tbody>
+        </table>
+    </div>
+    <div class="modal fade" id="cannotdelete" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Lỗi</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Không thể xóa sản phẩm !</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="deleteProductModal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Cảnh báo</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn xóa sản phẩm này?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger deleteProdcutBtn" data-dismiss="modal">Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="importProductModal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Nhập hàng</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        <label for="amount">Số lượng</label>
+                        <input class="form-control" type="number" name="amount" />
+                        <label for="date">Ngày nhập</label>
+                        <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+                            <input type="text" class="form-control" id="date" name="import_date">
+                            <div class="input-group-addon">
+                                <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <input type="hidden" name="Id" class="productId"/>
+                        <input type="hidden" name="act" value="import" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info">Nhập</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exportProductModal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Xuất hàng</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        <label for="amount">Số lượng</label>
+                        <input class="form-control" type="number" name="amount" />
+                        <label for="date">Ngày xuất</label>
+                        <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+                            <input type="text" class="form-control" id="date" name="import_date">
+                            <div class="input-group-addon">
+                                <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <input type="hidden" name="Id" class="productId"/>
+                        <input type="hidden" name="act" value="export" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info">Xuất</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{{> bottom}}

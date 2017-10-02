@@ -1,0 +1,65 @@
+{{> head}}
+<body>
+    {{#isAdmin}}
+        {{> AdminNav}}
+    {{/isAdmin}}
+    {{^isAdmin}}
+        {{> EmployeeNav}}
+    {{/isAdmin}}
+    <a href="{{base_path}}/storage/add" class="btn btn-info">Thêm kho</a>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Tên kho</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#storages}}
+                <tr>
+                    <td>{{Name}}</td>
+                    <td>
+                        <a href="{{base_path}}/storage/{{Id}}" class="btn btn-info">Xem thêm</a>
+                        <button data-target="#deleteStorageModal" data-toggle="modal" class="btn btn-danger" data-id="{{Id}}">Xóa</button>
+                        <a href="{{base_path}}/storage/{{Id}}/edit" class="btn btn-info">Sửa</a>
+                    </td>
+                </tr>
+                {{/storages}}
+            </tbody>
+        </table>
+    </div>
+    <div class="modal fade" id="cannotdelete" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Không thể xóa kho !</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Không thể xóa kho !</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="deleteStorageModal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Xóa kho này ?</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc muốn xóa kho này ? tất cả mọi thứ về kho sẽ mất !</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger deleteStorageBtn" data-dismiss="modal">Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{{> bottom}}

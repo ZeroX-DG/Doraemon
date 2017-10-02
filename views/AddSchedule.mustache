@@ -1,0 +1,36 @@
+{{> head}}
+<link rel="stylesheet" href="{{view_path}}/assets/css/styles_1.css">
+<body>
+    {{#isAdmin}}
+        {{> AdminNav}}
+    {{/isAdmin}}
+    {{^isAdmin}}
+        {{> EmployeeNav}}
+    {{/isAdmin}}
+    <div>
+    <h3 class="text-center">Thêm lịch</h3>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+		    <form method="post" id="addScheduleForm">
+				<span id="bug"></span>
+		        <div class="form-group">
+		            <label for="scheduleName">Tên lịch</label>
+		            <input type="text" class="form-control" name="name"/>
+		        </div>
+		        <div class="form-group">
+		            <label for="scheduleStart">Ngày bắt đầu</label>
+		            <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+		                <input type="text" class="form-control" id="scheduleDateStart" name="date_start">
+		                <div class="input-group-addon">
+		                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
+		                </div>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		        	<button type="submit" class="btn btn-info">Thêm</button>
+		        </div>
+			</form>
+		</div>
+	</div>
+</body>
+{{> bottom}}

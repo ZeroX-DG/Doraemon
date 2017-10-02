@@ -45,28 +45,33 @@ class AccountController{
 		$user->DisplayName = $username;
 		$user->Role = 2;
 		$user->save();
-		return View("AddNewAccount", ["hasMes" => true, "mess"=>"Thêm thành công"]);
+		return View("AddNewAccount", ["isAdmin"=> true,"hasMes" => true, "mess"=>"Thêm thành công"]);
 	}
 	public function EditAccountmanagement($id){
-		$id = (int)$id;
 		$username = $_POST['UserName'];
 		$DisplayName = $_POST['DisplayName'];
-		$employee = Users::find($id);
-		$employee->UserName = $username;
-		$employee->DisplayName = $DisplayName;
-		$employee->save();
-		return View("EditAccount", ["isAdmin" => true, "employee" => $employee,"hasMes" => true, "mess"=>"Chỉnh sửa thành công "]);
+		$cemployee = Users::find($id);
+		$cemployee->UserName = $username;
+		$cemployee->DisplayName = $DisplayName;
+		$cemployee->save();
+		redirect("/account");
+		// return View("EditAccount", [
+		// 	"isAdmin" => true, 
+		// 	"employee" => $employee,
+		// 	"hasMes" => true, 
+		// 	"mess"=>"Chỉnh sửa thành công "
+		// ]);
 	}
-	public function DeleteAccount($id){
-		$id = (int)$id;
-		$username = $_POST['UserName'];
-		$DisplayName = $_POST['DisplayName'];
-		$employee = Users::find($id);
-		if ($employee != null) {
-			$employee->delete();
-		}
-		else{
-			redirect("/account");
+	public function DeleteAccount(){
+		$id = (int)$_POST['Id'];
+		if($_SESSION['Role'] == ADMIN_ROLE){
+			$isDelete = Users::where('Id', '=', $id)->delete();
+			if($isDelete){
+				echo "done";
+			}
+			else{
+				echo $isDelete;
+			}
 		}
 	}
 }

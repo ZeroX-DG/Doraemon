@@ -82,13 +82,14 @@ $(".shiftDelBtn").click(function(e){
 	$.ajax({
 		method: "POST",
 		url: document.location.href + '/delete',
-		data: { id: id }
-	}).done(function(mes) {
-		if(mes == "done"){
-			el.parent().parent().remove();
-		}
-		else{
-			$("#cannotdelete").modal();
+		data: { id: id },
+		success: function(mes) {
+			if(mes.indexOf("done") != -1){
+				el.parent().parent().remove();
+			}
+			else{
+				$("#cannotdelete").modal();
+			}
 		}
 	});
 });
@@ -98,8 +99,135 @@ $("#deleteShiftModal").on('show.bs.modal', function (e) {
 	el = $(e.relatedTarget);
 });
 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
+function oneDot(input) {
+    var value = input.value,
+        value = value.split('.').join('');
+
+    if (value.length > 3) {
+      value = value.substring(0, value.length - 3) + '.' + value.substring(value.length - 3, value.length);
+    }
+
+    input.value = value;
+}
+
+$(".salaryByHour").keyup(function(){
+	let attendanceHours = $(this).parent().siblings(".AttendanceHour").html();
+	let salaryByHour = parseFloat($(this).val().replace(".", "")) || 0;
+	let total = numberWithCommas(attendanceHours * salaryByHour);
+	$(this).parent().siblings(".totalSalary").html(total + " vnđ");
+});
+
+$(".bonusSalary").keyup(function(){
+	let currentTotal = parseFloat($(this).parent().siblings(".totalSalary").html().replace(",", "").replace(" vnđ", ""));
+	let bonusSalary = parseFloat($(this).val().replace(".", "")) || 0;
+	let total = numberWithCommas(currentTotal + bonusSalary);
+	$(this).parent().siblings(".totalSalary").html(total + " vnđ");
+});
+
+$(".cashAdvance").keyup(function(){
+	let currentTotal = parseFloat($(this).parent().siblings(".totalSalary").html().replace(",", "").replace(" vnđ", ""));
+	let cashAdvance = parseFloat($(this).val().replace(".", "")) || 0;
+	let total = numberWithCommas(currentTotal - cashAdvance);
+	$(this).parent().siblings(".totalSalary").html(total + " vnđ");
+});
+
+$("#scheduleDateStart").change(function(){
+	let datestr = $(this).val();
+	let date = new Date(datestr);
+	if(date.getDay() != 1){
+		$("#bug").html("<b style=\"color: red\">Ngày bắt đầu phải là thứ 2 !</b><br>");
+	}
+	else{
+		$("#bug").html("");
+	}
+});
+
+$("#addScheduleForm").on("submit", function(e){
+	if($("#bug").html() != ""){
+		e.preventDefault();
+	}
+});
+let el1;
+$("#deleteAccountModal").on('show.bs.modal', function (e) {
+	var id = $(e.relatedTarget).data("id");
+	$(this).find(".deleteAccountBtn").data("id", id);
+	el1 = $(e.relatedTarget);
+});
+$(".deleteAccountBtn").click(function(e){
+	let id = $(this).data("id");
+	$.ajax({
+		method: "POST",
+		url: document.location.href + '/delete',
+		data: { Id: id },
+		success: function(mes) {
+			if(mes.indexOf("done") != -1){
+				el1.parent().parent().remove();
+			}
+			else{
+				$("#cannotdelete").modal();
+			}
+		}
+	});
+});
+
+let el2;
+$("#deleteProductModal").on('show.bs.modal', function (e) {
+	var id = $(e.relatedTarget).data("id");
+	$(this).find(".deleteProdcutBtn").data("id", id);
+	el2 = $(e.relatedTarget);
+});
+$(".deleteProdcutBtn").click(function(e){
+	let id = $(this).data("id");
+	$.ajax({
+		method: "POST",
+		url: document.location.href + '/delete',
+		data: { Id: id },
+		success: function(mes) {
+			if(mes.indexOf("done") != -1){
+				el2.parent().parent().remove();
+			}
+			else{
+				$("#cannotdelete").modal();
+			}
+		}
+	});
+});
+
+let el3;
+$("#deleteStorageModal").on('show.bs.modal', function (e) {
+	let id = $(e.relatedTarget).data("id");
+	$(this).find(".deleteStorageBtn").data("id", id);
+	el3 = $(e.relatedTarget);
+});
+$(".deleteStorageBtn").click(function(e){
+	let id = $(this).data("id");
+	$.ajax({
+		method: "POST",
+		url: document.location.href + '/delete',
+		data: { Id: id },
+		success: function(mes) {
+			if(mes.indexOf("done") != -1){
+				el3.parent().parent().remove();
+			}
+			else{
+				$("#cannotdelete").modal();
+			}
+		}
+	});
+});
+$(".importBtn").click(function(){
+	$("#importProductModal").find(".productId").val($(this).data("id"));
+});
+
+$(".exportBtn").click(function(){
+	$("#exportProductModal").find(".productId").val($(this).data("id"));
+});
 $('.datepicker').datepicker({
     format: 'yyyy-mm-dd',
     startDate: '-3d'
 });
+

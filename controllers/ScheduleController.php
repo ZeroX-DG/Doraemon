@@ -33,8 +33,9 @@ class ScheduleController{
 		}	
 		
 		if($scheduleInfo == null){
-			echo "Schedule not found !";
-			return;
+			if($_SESSION['Role'] == ADMIN_ROLE){
+				return View("AddSchedule", ["isAdmin" => true]);
+			}
 		}
 		$scheduleInfo = $scheduleInfo->toArray();
 		// get employee list
@@ -110,7 +111,9 @@ class ScheduleController{
 			$schedule = new Schedules;
 			$schedule->Name = $_POST['name'];
 			$schedule->Date_start = date($_POST['date_start']);
-			$schedule->Date_end = date($_POST['date_end']); 
+			$schedule->Date_end = date('Y-m-d', strtotime(
+				$_POST['date_start']. ' + 6 days'
+			));
 			$schedule->save();
 			redirect('/schedules');
 		}

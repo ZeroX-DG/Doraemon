@@ -100,14 +100,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Mày sủa không</h4>
+                    <h4 class="modal-title">Bạn có chắc ?</h4>
                 </div>
                 <div class="modal-body">
-                    <p>Mày có sủa không ?</p>
+                    <p>Bạn có chắc muốn xóa ca này ?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger deleteShift" data-dismiss="modal">Tao sủa</button>
-                    <button type="button" class="btn btn-info" data-dismiss="modal">Tao không sủa</button>
+                    <button type="button" class="btn btn-danger deleteShift" data-dismiss="modal">Xóa</button>
+                    <button type="button" class="btn btn-info" data-dismiss="modal">Thôi không xóa</button>
                 </div>
             </div>
         </div>
@@ -141,7 +141,8 @@
                     <h4 class="modal-title">Thêm lịch làm việc</h4>
                 </div>
                 <div class="modal-body">
-                    <form method="post">
+                    <form method="post" id="addScheduleForm">
+                        <span id="bug"></span>
                         <div class="form-group">
                             <label for="scheduleName">Tên lịch</label>
                             <input type="text" class="form-control" name="name"/>
@@ -149,7 +150,7 @@
                         <div class="form-group">
                             <label for="scheduleStart">Ngày bắt đầu</label>
                             <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
-                                <input type="text" class="form-control" name="date_start">
+                                <input type="text" class="form-control" id="scheduleDateStart" name="date_start">
                                 <div class="input-group-addon">
                                     <i class="fa fa-chevron-down" aria-hidden="true"></i>
                                 </div>
@@ -157,8 +158,8 @@
                         </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger">Tao sủa</button>
-                    <button type="button" class="btn btn-info" data-dismiss="modal">Tao không sủa</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Không thêm</button>
+                    <button type="submit" class="btn btn-info">Thêm</button>
                 </div>
                 </form>
             </div>
