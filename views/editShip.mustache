@@ -1,0 +1,72 @@
+{{> head}}
+<body>
+    {{#isAdmin}}
+    {{> AdminNav}}
+    {{/isAdmin}}
+    {{^isAdmin}}
+    {{> EmployeeNav}}
+    {{/isAdmin}}
+    <h1 class="text-center">Sửa hóa đơn giao hàng</h1>
+    <div class="container">
+        {{#ship}}
+        <form method="POST">
+            <div class="row">
+                <div class="col-md-6">
+
+                    <h4>Địa chỉ giao hàng:</h4>
+                    <input class="form-control" value="{{Address}}" name="address" type="text">
+                    
+                </div>
+                <div class="col-md-6">
+
+                    <h4>Số điện thoại:</h4>
+                    <input class="form-control" value="{{Phone}}" name="phone" type="text">
+                    
+                </div>
+                <div class="col-md-6">
+
+                    <h4>Giá tiền đơn hàng:</h4>
+                    <input class="form-control" value="{{Total}}" onkeyup="addCommas(this)" name="total" type="text">
+                    
+                </div>
+                <div class="col-md-6">
+
+                    <h4>Phí ship:</h4>
+                    <select name="ShipPrice" class="form-control">
+                        {{#shipPrice}}
+                        <option value="{{price}}" {{selected}}>{{label}}</option>
+                        {{/shipPrice}}
+                    </select>
+                    
+                </div>
+                <div class="col-md-6">
+
+                    <h4>Số ly:</h4>
+                    <input class="form-control" value="{{Amount}}" name="amount" type="text">
+                    
+                </div>
+                <div class="col-md-6">
+
+                    <h4>Khoảng cách:</h4>
+                    <input class="form-control" value="{{Distance}}" name="distance" type="text">
+                    
+                </div>
+                <div class="col-md-12">
+
+                    <h4>Người giao:</h4>
+                    <select name="shipper" id="" class="form-control">
+                        {{#employees}}
+                        <option value="{{Id}}" {{selected}}>{{DisplayName}}</option>
+                        {{/employees}}
+                    </select>
+                    
+                </div>
+            </div>
+            <br>
+            <button class="btn btn-success btn-lg" type="submit">Lưu hóa đơn</button>
+            <a href="{{base_path}}/ships" class="btn btn-primary btn-lg">Quay lại</a>
+        </form>
+        {{/ship}}
+    </div>
+</body>
+{{> bottom}}

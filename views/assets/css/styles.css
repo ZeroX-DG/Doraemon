@@ -28,11 +28,11 @@ div#mask{
 }
 
 label#lb_username.control-label{
-  color:white;
+  color:black;
 }
 
 label#lb_pass.control-label{
-  color:white;
+  color:black;
 }
 
 button#btn_add.btn.btn-primary.btn-lg{

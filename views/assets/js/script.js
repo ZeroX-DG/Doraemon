@@ -103,6 +103,10 @@ function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+function addCommas(target){
+	$(target).val(numberWithCommas($(target).val().replace(",", "")));
+}
+
 function oneDot(input) {
     var value = input.value,
         value = value.split('.').join('');
@@ -215,6 +219,46 @@ $(".deleteStorageBtn").click(function(e){
 			}
 			else{
 				$("#cannotdelete").modal();
+			}
+		}
+	});
+});
+
+let el4;
+$("#cancelShipModal").on('show.bs.modal', function (e) {
+	let id = $(e.relatedTarget).data("id");
+	$(this).find(".cancelShip").data("id", id);
+	el4 = $(e.relatedTarget);
+});
+$(".cancelShip").click(function(e){
+	let id = $(this).data("id");
+	$.ajax({
+		method: "POST",
+		url: document.location.href + '/cancel',
+		data: { Id: id },
+		success: function(mes) {
+			if(mes.indexOf("done") != -1){
+				el4.parent().parent().remove();
+			}
+		}
+	});
+});
+
+let el5;
+$("#doneShipModal").on('show.bs.modal', function (e) {
+	let id = $(e.relatedTarget).data("id");
+	$(this).find(".acceptShip").data("id", id);
+	el4 = $(e.relatedTarget);
+});
+$(".acceptShip").click(function(e){
+	let id = $(this).data("id");
+	$.ajax({
+		method: "POST",
+		url: document.location.href + '/done',
+		data: { Id: id },
+		success: function(mes) {
+			if(mes.indexOf("done") != -1){
+				el4.parent().parent().remove();
 			}
 		}
 	});

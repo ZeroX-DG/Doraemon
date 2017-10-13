@@ -76,6 +76,18 @@ $router->mount("/salary", function() use ($router){
 	$router->get("/", 'SalaryController@Index');
 });
 
+$router->mount("/ships", function() use ($router){
+	$router->get("/", 'ShipController@Index');
+	$router->get("/add", 'ShipController@ViewAddShip');
+	$router->post("/add", 'ShipController@AddShip');
+	$router->get("/history", 'ShipController@History');
+	$router->post("/cancel", 'ShipController@Cancel');
+	$router->post("/done", 'ShipController@Done');
+	$router->get("/edit/(\d+)", 'ShipController@ViewEdit');
+	$router->post("/edit/(\d+)", 'ShipController@Edit');
+	$router->get("/search", 'ShipController@ViewSearch');
+});
+
 $router->before('GET', '/.*', function(){
 	if(!isset($_SESSION['UserName']) &&
 		!isset($_SESSION['Role']) &&

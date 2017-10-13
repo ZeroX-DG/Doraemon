@@ -30,5 +30,7 @@ function get_client_ip() {
         $ipaddress = 'UNKNOWN';
     return $ipaddress;
 }
-
+function number_with_comma($number){
+    return preg_replace("/\B(?=(\d{3})+(?!\d))/i", ",", $number);
+}
 ?>
