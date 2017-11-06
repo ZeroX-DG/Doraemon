@@ -55,12 +55,6 @@ class AccountController{
 		$cemployee->DisplayName = $DisplayName;
 		$cemployee->save();
 		redirect("/account");
-		// return View("EditAccount", [
-		// 	"isAdmin" => true, 
-		// 	"employee" => $employee,
-		// 	"hasMes" => true, 
-		// 	"mess"=>"Chỉnh sửa thành công "
-		// ]);
 	}
 	public function DeleteAccount(){
 		$id = (int)$_POST['Id'];

@@ -155,16 +155,35 @@ class ShipController{
 		if($address != ""){
 			$result = Ships::where("Address" , "LIKE", "%".$address."%");
 		}
-		if($shipper != ""){
+		if($shipper != "" && $result != null){
 			$result = $result->where("Shipper" , "LIKE", "%".$shipper."%");
 		}
-		if($distance != ""){
-			$result = $result->where("Distance" , "LIKE", "%".$distance."%");
+		else if($shipper != "" && $result == null){
+			$result = Ships::where("Shipper" , "LIKE", "%".$shipper."%");
 		}
-		if($phone != ""){
+		if($distance != "" && $result != null){
+			$result = $result->where("Distance" , "=", $distance);
+		}
+		else if($distance != "" && $result == null){
+			$result = Ships::where("Distance" , "=", $distance);
+		}
+		if($phone != "" && $result != null){
 			$result = $result->where("Phone" , "LIKE", "%".$phone."%");
 		}
-		return $result->get();
+		else if($phone != "" && $result == null){
+			$result = Ships::where("Phone" , "LIKE", "%".$phone."%");
+		}
+		$ships = $result == null ? [] : $result->get();
+		$data = [];
+		foreach ($ships as $ship) {
+			$user = Users::where("Id", "=", $ship["Shipper"])->first();
+			$ship["Shipper"] = $user->DisplayName;
+			$ship["Distance"] = number_with_comma($ship["Distance"]) . " Km";
+			$ship["Total"] = number_with_comma($ship["Total"]) . " vnđ";
+			$ship["ShipPrice"] = number_with_comma($ship["ShipPrice"]) . " vnđ";
+			array_push($data, $ship);
+		}
+		return $data;
 	}
 }
 ?>

@@ -112,7 +112,15 @@ class ShiftController{
 		$dayOfWeek  = $_POST['dayOfWeek'];
 		$shift      = $_POST['shift'];
 		$employeeId = $_POST['employeeId'];
-
+		$foundShift = Schedule_details::where("Schedule_id", "=", $scheduleId)
+										->where("DayOfWeek", "=", $dayOfWeek)
+										->where("ShiftId", "=", $shift)
+										->where("UserId", "=", $employeeId)
+										->get();
+		if(count($foundShift) != 0){
+			echo "nope";
+			return;
+		}
 		$schedule = Schedules::find($scheduleId);
 		if($_SESSION['Role'] == ADMIN_ROLE){
 			$details = new Schedule_details;

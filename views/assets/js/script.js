@@ -43,8 +43,14 @@ $("#addBtn").click(function(){
 		data: { scheduleId: scheduleId, dayOfWeek: dates, shift: shift, employeeId: employeeId }
 	})
 	.done(function(data) {
-		var td = $("#e" + employeeId).children()[dates - 1];
+		if(data.indexOf("nope") != -1){
+			$("#CantAddShiftModal").modal();
+		}
+		else{
+			var td = $("#e" + employeeId).children()[dates - 1];
 			$(td).html($(td).html() + data);
+		}
+		
 	});
 });
 
