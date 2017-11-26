@@ -1,0 +1,37 @@
+{{> head}}
+<body>
+  {{#isAdmin}}
+  {{> AdminNav}}
+  {{/isAdmin}}
+  {{^isAdmin}}
+  {{> EmployeeNav}}
+  {{/isAdmin}}
+  <h1>Lịch sử tính lương </h1>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Tên nhân viên </th>
+          <th>Lương </th>
+          <th>Số giờ công</th>
+          <th>Thưởng </th>
+          <th>Tạm ứng</th>
+          <th>Tổng </th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#data}}
+        <tr>
+          <td>{{userName}}</td>
+          <td>{{salary_by_hour}}</td>
+          <td>{{work_hour}}</td>
+          <td>{{bonus}}</td>
+          <td>{{cash_advance}}</td>
+          <td>{{total_salary}}</td>
+        </tr>
+        {{/data}}
+      </tbody>
+    </table>
+  </div>
+</body>
+{{> bottom}}

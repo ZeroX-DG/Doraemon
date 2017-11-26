@@ -1,45 +1,76 @@
 {{> head}}
 <body>
-    {{#isAdmin}}
-        {{> AdminNav}}
-    {{/isAdmin}}
-    {{^isAdmin}}
-        {{> EmployeeNav}}
-    {{/isAdmin}}
-    <h1>Tính lương nhân viên</h1>
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Nhân viên</th>
-                    <th>lương </th>
-                    <th>Số giờ công</th>
-                    <th>Thưởng</th>
-                    <th>Tạm ứng</th>
-                    <th>Tổng</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#employees}}
-                <tr>
-                    <td>{{DisplayName}}</td>
-                    <td>
-                        <input type="number" class="salaryByHour" onkeyup="oneDot(this)">
-                    </td>
-                    <td class="AttendanceHour">{{AttendanceHour}}</td>
-                    <td>
-                        <input type="number" class="bonusSalary" onkeyup="oneDot(this)">
-                    </td>
-                    <td>
-                        <input type="number" class="cashAdvance" onkeyup="oneDot(this)">
-                    </td>
-                    <td class="totalSalary">
-                        0
-                    </td>
-                </tr>
-                {{/employees}}
-            </tbody>
-        </table>
+  {{#isAdmin}}
+  {{> AdminNav}}
+  {{/isAdmin}}
+  {{^isAdmin}}
+  {{> EmployeeNav}}
+  {{/isAdmin}}
+  <h1>Tính lương nhân viên</h1>
+  <a href="{{base_path}}/salary/history" class="btn btn-info">lịch sử tính lương</a>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nhân viên</th>
+          <th>lương </th>
+          <th>Số giờ công</th>
+          <th>Thưởng</th>
+          <th>Tạm ứng</th>
+          <th>Tổng</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#employees}}
+        <tr id="{{ Id }}" class="salaries">
+          <td>{{DisplayName}}</td>
+          <td class="salaryByHour">
+            <input type="number" onkeyup="oneDot(this)">
+          </td>
+          <td class="AttendanceHour">{{AttendanceHour}}</td>
+          <td class="bonusSalary">
+            <input type="number" onkeyup="oneDot(this)">
+          </td>
+          <td class="cashAdvance">
+            <input type="number" onkeyup="oneDot(this)">
+          </td>
+          <td class="totalSalary">
+            0 vnđ
+          </td>
+        </tr>
+        {{/employees}}
+      </tbody>
+    </table>
+    <button class="btn btn-success" data-toggle="modal" data-target="#SaveSalaryModal" style="float: right; margin-right: 20px">Lưu</button>
+    <div class="modal fade" id="SaveSalaryModal" role="dialog">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Lưu bảng lương</h4>
+          </div>
+          <div class="modal-body">
+            <select class="form-control" id="month">
+              <option value="1">Tháng 1</option>
+              <option value="2">Tháng 2</option>
+              <option value="3">Tháng 3</option>
+              <option value="4">Tháng 4</option>
+              <option value="5">Tháng 5</option>
+              <option value="6">Tháng 6</option>
+              <option value="7">Tháng 7</option>
+              <option value="8">Tháng 8</option>
+              <option value="9">Tháng 9</option>
+              <option value="10">Tháng 10</option>
+              <option value="11">Tháng 11</option>
+              <option value="12">Tháng 12</option>
+            </select>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-info" onclick="sendSalaryHistory()">Lưu</button>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </body>
 {{> bottom}}

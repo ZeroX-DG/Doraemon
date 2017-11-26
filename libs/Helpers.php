@@ -1,4 +1,6 @@
 <?php
+use Model\Users;
+use Model\user_permissions;
 function assets($path){
 	return VIEW_FOLDER.$path;
 }
@@ -32,5 +34,12 @@ function get_client_ip() {
 }
 function number_with_comma($number){
     return preg_replace("/\B(?=(\d{3})+(?!\d))/i", ",", $number);
+}
+function havePermission($permissionId){
+  $permission = user_permissions::where('userId', '=', $_SESSION['Uid'])
+                                ->where('permissionId', '=', $permissionId)
+                                ->get()
+                                ->toArray();
+  return count($permission) > 0;
 }
 ?>

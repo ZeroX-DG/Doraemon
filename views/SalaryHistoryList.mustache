@@ -1,0 +1,31 @@
+{{> head}}
+<body>
+  {{#isAdmin}}
+  {{> AdminNav}}
+  {{/isAdmin}}
+  {{^isAdmin}}
+  {{> EmployeeNav}}
+  {{/isAdmin}}
+  <h1>Lịch sử tính lương </h1>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Tên bảng lương</th>
+          <th>ngày tạo</th>
+          <th>hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#data}}
+          <tr>
+            <td>{{Name}}</td>
+            <td>{{createAt}}</td>
+            <td><a href="{{base_path}}/salary/history/{{Id}}" class="btn btn-info">Xem chi tiết</a></td>
+          </tr>
+        {{/data}}
+      </tbody>
+    </table>
+  </div>
+</body>
+{{> bottom}}

@@ -1,4 +1,5 @@
 <?php
+ob_start();
 // Require composer autoloader
 require __DIR__ . '/vendor/autoload.php';
 // database setting
@@ -58,3 +59,4 @@ $router = new \Bramus\Router\Router();
 require 'libs/routes.php';
 // Run it!
 $router->run();
+ob_end_flush();

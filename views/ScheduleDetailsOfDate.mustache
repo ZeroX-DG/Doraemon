@@ -1,0 +1,46 @@
+{{> head}}
+<body>
+  {{#isAdmin}}
+  {{> AdminNav}}
+  {{/isAdmin}}
+  {{^isAdmin}}
+  {{> EmployeeNav}}
+  {{/isAdmin}}
+  <div>
+    <div class="col-md-12 text-center">
+      <h3>Lịch làm việc ngày thứ 2 (10/10)</h3>
+    </div>
+    
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <td rowspan="2">Tên nhân viên</td>
+            <td rowspan="2">Tổng số giờ làm việc</td>
+            <td colspan="{{shiftCount}}" class="text-center">Các ca làm việc</td>
+          </tr>
+          <tr>
+            {{#shifts}}
+            <td>{{Name}} <br> ({{Time_start}} -> {{Time_end}})</td>
+            {{/shifts}}
+          </tr>
+        </thead>
+        <tbody>
+          {{#data}}
+          <tr>
+            <td>{{user.DisplayName}}</td>
+            <td>{{AttendanceHour}}</td>
+            {{#checkState}}
+              {{#state}}
+              <td><input type="checkbox" data-userid="{{user.Id}}" data-shiftid="{{Id}}" checked></td>
+              {{/state}}
+              {{^state}}
+              <td><input type="checkbox" data-userid="{{user.Id}}" data-shiftid="{{Id}}"></td>
+              {{/state}}
+            {{/checkState}}
+          </tr>
+          {{/data}}
+        </tbody>
+      </table>
+  </div>
+</body>
+{{> bottom}}

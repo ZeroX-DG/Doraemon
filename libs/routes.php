@@ -39,6 +39,7 @@ $router->mount('/schedules', function() use ($router){
 	$router->get('/', 'ScheduleController@details');
 	$router->post('/', 'ScheduleController@addSchedule');
 	$router->get('/(\d+)', 'ScheduleController@details');
+	$router->get('/(\d+)/(\d+)', 'ScheduleController@detailOfDate');
 	$router->post('/(\d+)', 'ScheduleController@addSchedule');
 	$router->post('/shift/delete', 'ShiftController@deleteShiftFromSchedule');
 	$router->post('/shift/add', 'ShiftController@addShiftToSchedule');
@@ -74,6 +75,9 @@ $router->get('/storageHistory', 'StorageController@history');
 
 $router->mount("/salary", function() use ($router){
 	$router->get("/", 'SalaryController@Index');
+  $router->get("/history/(\d+)", 'SalaryController@viewHistory');
+  $router->get("/history", 'SalaryController@viewHistory');
+  $router->post("/save", 'SalaryController@saveToHistory');
 });
 
 $router->mount("/ships", function() use ($router){
@@ -86,6 +90,22 @@ $router->mount("/ships", function() use ($router){
 	$router->get("/edit/(\d+)", 'ShipController@ViewEdit');
 	$router->post("/edit/(\d+)", 'ShipController@Edit');
 	$router->get("/search", 'ShipController@ViewSearch');
+});
+
+$router->mount("/permissions", function() use ($router){
+  $router->get("/", "PermissionsController@Index");
+  $router->get(
+    "/getPermission/(\d+)", 
+    "PermissionsController@getPermissionByUserId"
+  );
+  $router->post(
+    '/addPermission/(\d+)/(\d+)',
+    'PermissionsController@addPermission'
+  );
+  $router->post(
+    '/removePermission/(\d+)/(\d+)',
+    'PermissionsController@removePermission'
+  );
 });
 
 $router->before('GET', '/.*', function(){

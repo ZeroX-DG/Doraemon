@@ -1,0 +1,33 @@
+{{> head}}
+<body>
+  {{#isAdmin}}
+    {{> AdminNav}}
+  {{/isAdmin}}
+  {{^isAdmin}}
+    {{> EmployeeNav}}
+  {{/isAdmin}}
+  <h1>Phân Quyền</h1>
+  <div class="col-md-6">
+    <h3>Nhân viên</h3>
+    <select class="form-control" id="staff">
+      {{#users}}
+      <option value="{{Id}}">{{DisplayName}}</option>
+      {{/users}}
+    </select>
+  </div>
+  <div class="col-md-6">
+    <h3>Quyền</h3>
+    <div class="checkbox">
+      {{#permissionsList}}
+        <h4>{{department}}</h4>
+        {{#permissions}}
+        <label>
+          <input type="checkbox" id="{{Id}}" class="checkBoxPermission">{{name}}
+        </label>
+        <br>
+        {{/permissions}}
+      {{/permissionsList}}
+    </div>
+  </div>
+</body>
+{{> bottom}}

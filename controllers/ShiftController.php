@@ -92,74 +92,84 @@ class ShiftController{
 	}
 
 	public function deleteShiftFromSchedule(){
-		$uid     = $_POST['uid'];
-		$shiftId = $_POST['shiftId'];
-		$date    = $_POST['date'];
-		if($_SESSION['Role'] == ADMIN_ROLE){
-			Schedule_details::where('Date', '=', $date)
-							->where('ShiftId', '=', $shiftId)
-							->where('UserId', '=', $uid)
-							->delete();
-			echo "success";
-		}
-		else{
-			echo "nope";
-		}
+    if(havePermission(5)){
+  		$uid     = $_POST['uid'];
+  		$shiftId = $_POST['shiftId'];
+  		$date    = $_POST['date'];
+  		if($_SESSION['Role'] == ADMIN_ROLE){
+  			Schedule_details::where('Date', '=', $date)
+  							->where('ShiftId', '=', $shiftId)
+  							->where('UserId', '=', $uid)
+  							->delete();
+  			echo "success";
+  		}
+  		else{
+  			echo "nope";
+  		}
+    }
+    else{
+      echo "bạn không có quyền vào trang này";
+    }
 	}
 
 	public function addShiftToSchedule(){
-		$scheduleId = $_POST['scheduleId'];
-		$dayOfWeek  = $_POST['dayOfWeek'];
-		$shift      = $_POST['shift'];
-		$employeeId = $_POST['employeeId'];
-		$foundShift = Schedule_details::where("Schedule_id", "=", $scheduleId)
-										->where("DayOfWeek", "=", $dayOfWeek)
-										->where("ShiftId", "=", $shift)
-										->where("UserId", "=", $employeeId)
-										->get();
-		if(count($foundShift) != 0){
-			echo "nope";
-			return;
-		}
-		$schedule = Schedules::find($scheduleId);
-		if($_SESSION['Role'] == ADMIN_ROLE){
-			$details = new Schedule_details;
-			$details->Schedule_id = $scheduleId;
-			$details->DayOfWeek = $dayOfWeek;
-			$details->UserId = $employeeId;
-			$details->ShiftId = $shift;
-			$date = date('Y-m-d', strtotime($schedule->Date_start.' + ' . $dayOfWeek . ' days'));
-			$details->Date = $date;
-			$details->save();
-			$shiftDetails = Shifts::find($shift)->toArray();
-			$timeStartParts = date_parse($shiftDetails["Time_start"]);
-			$timeEndParts = date_parse($shiftDetails["Time_end"]);
-			$timeAt = "";
-			if($timeStartParts["hour"] < 12){
-				$timeAt = "morning";
-			}
-			else if($timeStartParts["hour"] < 17){
-				$timeAt = "afternoon";
-			}
-			else{
-				$timeAt = "night";
-			}
-			
-			$html = "<div class='shift-panel ".$timeAt."'>";
-			$html .= "<div class='name text-center'>";
-			$html .= $shiftDetails["Name"];
-			$html .= "<div class='time text-center'>";
-			$html .= $shiftDetails["Time_start"] . " - " . $shiftDetails["Time_end"];
-			$html .= "</div>";
-			$html .= "<div class='text-center' style='font-size: 1.5em'>";
-			$html .= "<i class='fa fa-trash' data-toggle='modal' data-target='#deleteModal' style='cursor: pointer' data-uid='".$employeeId."' data-date='". $date. "' data-shiftId='".$shift."'></i>";
-			$html .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-			$html .= "<a href='".MAIN_PATH."/schedules/shift/find/".$scheduleId."/".$shift."' style='color: inherit;'>
-				<i class='fa fa-list' style='cursor: pointer; color: inherit;'></i>
-			</a>";
-			$html .= "</div>";
-			echo $html;
-		}		
+    if(havePermission(5)){
+  		$scheduleId = $_POST['scheduleId'];
+  		$dayOfWeek  = $_POST['dayOfWeek'];
+  		$shift      = $_POST['shift'];
+  		$employeeId = $_POST['employeeId'];
+  		$foundShift = Schedule_details::where("Schedule_id", "=", $scheduleId)
+  										->where("DayOfWeek", "=", $dayOfWeek)
+  										->where("ShiftId", "=", $shift)
+  										->where("UserId", "=", $employeeId)
+  										->get();
+  		if(count($foundShift) != 0){
+  			echo "nope";
+  			return;
+  		}
+  		$schedule = Schedules::find($scheduleId);
+  		if($_SESSION['Role'] == ADMIN_ROLE){
+  			$details = new Schedule_details;
+  			$details->Schedule_id = $scheduleId;
+  			$details->DayOfWeek = $dayOfWeek;
+  			$details->UserId = $employeeId;
+  			$details->ShiftId = $shift;
+  			$date = date('Y-m-d', strtotime($schedule->Date_start.' + ' . $dayOfWeek . ' days'));
+  			$details->Date = $date;
+  			$details->save();
+  			$shiftDetails = Shifts::find($shift)->toArray();
+  			$timeStartParts = date_parse($shiftDetails["Time_start"]);
+  			$timeEndParts = date_parse($shiftDetails["Time_end"]);
+  			$timeAt = "";
+  			if($timeStartParts["hour"] < 12){
+  				$timeAt = "morning";
+  			}
+  			else if($timeStartParts["hour"] < 17){
+  				$timeAt = "afternoon";
+  			}
+  			else{
+  				$timeAt = "night";
+  			}
+  			
+  			$html = "<div class='shift-panel ".$timeAt."'>";
+  			$html .= "<div class='name text-center'>";
+  			$html .= $shiftDetails["Name"];
+  			$html .= "<div class='time text-center'>";
+  			$html .= $shiftDetails["Time_start"] . " - " . $shiftDetails["Time_end"];
+  			$html .= "</div>";
+  			$html .= "<div class='text-center' style='font-size: 1.5em'>";
+  			$html .= "<i class='fa fa-trash' data-toggle='modal' data-target='#deleteModal' style='cursor: pointer' data-uid='".$employeeId."' data-date='". $date. "' data-shiftId='".$shift."'></i>";
+  			$html .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+  			$html .= "<a href='".MAIN_PATH."/schedules/shift/find/".$scheduleId."/".$shift."' style='color: inherit;'>
+  				<i class='fa fa-list' style='cursor: pointer; color: inherit;'></i>
+  			</a>";
+  			$html .= "</div>";
+  			echo $html;
+  		}
+    }		
+    else{
+      echo "bạn không có quyền vào trang này";
+    }
 	}
 }
 ?>

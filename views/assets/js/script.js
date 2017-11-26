@@ -124,25 +124,31 @@ function oneDot(input) {
     input.value = value;
 }
 
-$(".salaryByHour").keyup(function(){
-	let attendanceHours = $(this).parent().siblings(".AttendanceHour").html();
-	let salaryByHour = parseFloat($(this).val().replace(".", "")) || 0;
-	let total = numberWithCommas(attendanceHours * salaryByHour);
-	$(this).parent().siblings(".totalSalary").html(total + " vnđ");
+$(".salaryByHour input").keyup(function(){
+	let bonusSalary = parseFloat($(this).parent().siblings(".bonusSalary").find("input").val().replace(".", "")) || 0;
+  let salaryByHour = parseFloat($(this).val().replace(".", "")) || 0;
+  let attendanceHours = $(this).parent().siblings(".AttendanceHour").html();
+  let cashAdvance = parseFloat($(this).parent().siblings(".cashAdvance").find("input").val().replace(".", "")) || 0;
+  let total = numberWithCommas((salaryByHour * attendanceHours) + bonusSalary - cashAdvance);
+  $(this).parent().siblings(".totalSalary").html(total + " vnđ");
 });
 
-$(".bonusSalary").keyup(function(){
-	let currentTotal = parseFloat($(this).parent().siblings(".totalSalary").html().replace(",", "").replace(" vnđ", ""));
-	let bonusSalary = parseFloat($(this).val().replace(".", "")) || 0;
-	let total = numberWithCommas(currentTotal + bonusSalary);
-	$(this).parent().siblings(".totalSalary").html(total + " vnđ");
+$(".bonusSalary input").keyup(function(){
+  let bonusSalary = parseFloat($(this).val().replace(".", "")) || 0;
+  let salaryByHour = parseFloat($(this).parent().siblings(".salaryByHour").find("input").val().replace(".", "")) || 0;
+  let attendanceHours = $(this).parent().siblings(".AttendanceHour").html();
+  let cashAdvance = parseFloat($(this).parent().siblings(".cashAdvance").find("input").val().replace(".", "")) || 0;
+  let total = numberWithCommas((salaryByHour * attendanceHours) + bonusSalary - cashAdvance);
+  $(this).parent().siblings(".totalSalary").html(total + " vnđ");
 });
 
-$(".cashAdvance").keyup(function(){
-	let currentTotal = parseFloat($(this).parent().siblings(".totalSalary").html().replace(",", "").replace(" vnđ", ""));
-	let cashAdvance = parseFloat($(this).val().replace(".", "")) || 0;
-	let total = numberWithCommas(currentTotal - cashAdvance);
-	$(this).parent().siblings(".totalSalary").html(total + " vnđ");
+$(".cashAdvance input").keyup(function(){
+	let bonusSalary = parseFloat($(this).parent().siblings(".bonusSalary").find("input").val().replace(".", "")) || 0;
+  let salaryByHour = parseFloat($(this).parent().siblings(".salaryByHour").find("input").val().replace(".", "")) || 0;
+  let attendanceHours = $(this).parent().siblings(".AttendanceHour").html();
+  let cashAdvance = parseFloat($(this).val().replace(".", "")) || 0;
+  let total = numberWithCommas((salaryByHour * attendanceHours) + bonusSalary - cashAdvance);
+  $(this).parent().siblings(".totalSalary").html(total + " vnđ");
 });
 
 $("#scheduleDateStart").change(function(){
@@ -276,6 +282,133 @@ $(".importBtn").click(function(){
 $(".exportBtn").click(function(){
 	$("#exportProductModal").find(".productId").val($(this).data("id"));
 });
+//------------------------------
+// Permission management
+//------------------------------
+$("#staff").on('change', reloadPermission);
+function reloadPermission(){
+  let currentEmployee = $("#staff").val();
+  $.ajax({
+    method: "GET",
+    url: document.location.href + '/getPermission/' + currentEmployee,
+    success: function(list) {
+      let checkBoxPermissionList = $(".checkBoxPermission");
+      for(let i = 0; i < checkBoxPermissionList.length; i++){
+        let checkBox = $(checkBoxPermissionList[i]);
+        // if the check box id is match the permission id
+        if(list.indexOf(parseInt(checkBox.attr("id"))) != -1){
+          checkBox.prop('checked', true);
+        }
+        // otherwise uncheck the check box that doesn't match
+        else{
+          checkBox.prop('checked', false);
+        }
+      }
+    }
+  });
+}
+// trigger for first time the permission page load
+reloadPermission();
+$(".checkBoxPermission").change(function(){
+  let currentEmployee = $("#staff").val();
+  if(this.checked){
+    $.ajax({
+      method: "POST",
+      url: document.location.href + 
+          '/addPermission/' + 
+          currentEmployee + 
+          '/' +
+          this.id,
+    });
+  }
+  else{
+    $.ajax({
+      method: "POST",
+      url: document.location.href + 
+          '/removePermission/' + 
+          currentEmployee + 
+          '/' +
+          this.id,
+    });
+  }
+});
+
+function updatePermission(){}
+var rad = function(x) {
+  return x * Math.PI / 180;
+};
+
+var getDistance = function(p1, p2) {
+  var R = 6378137; // Earth’s mean radius in meter
+  var dLat = rad(p2.lat - p1.lat);
+  var dLong = rad(p2.lng - p1.lng);
+  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(rad(p1.lat)) * Math.cos(rad(p2.lat)) *
+    Math.sin(dLong / 2) * Math.sin(dLong / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = R * c;
+  return d; // returns the distance in meter
+};
+
+navigator.geolocation.getCurrentPosition((pos)=>{
+  let c_lng = pos.coords.latitude;
+  let c_lat = pos.coords.longitude;
+  //10.699807, 106.719721
+  //10.925218, 106.706398
+  //10.925938, 106.691752
+  //10.9286513,106.6880603
+  //10.786813, 106.666491
+  let p1 = {lng: c_lng, lat: c_lat};
+  let p2 = {lng: 10.786813, lat: 106.666491};
+  let dist = getDistance(p1, p2);
+  if(dist > 200) {
+    $(".distance").html("bạn đang ở quá xa");
+
+    $("#takeAttendance").remove();
+  }
+  else{
+    $(".distance").css("display", "none");
+  }
+});
+//------------------------
+// Salary History
+// data example:
+// [
+//   {
+//     uid: 1,
+//     work_hour: ...,
+//     salary_by_hour: ...,
+//     bonus: ...,
+//     cash_advance: ...
+//   }
+// ]
+function buildSalaryHistory() {
+  let salaryList = $(".salaries").toArray();
+  let result = [];
+  for(let i of salaryList) {
+    let dom = $(i);
+    let uid = dom.attr("id");
+    let work_hour = dom.find(".AttendanceHour").text().trim();
+    let salary_by_hour = dom.find(".salaryByHour").val().trim().replace(".", "") || 0;
+    let bonus = dom.find(".bonusSalary").val().trim().replace(".", "") || 0;
+    let cash_advance = dom.find(".cashAdvance").val().trim().replace(".", "") || 0;
+    let total_salary = dom.find(".totalSalary").text().trim().replace(",", "").replace(" vnđ", "") || 0;
+    result.push({uid, work_hour, salary_by_hour, bonus, cash_advance, total_salary});
+  }
+  return result;
+}
+function sendSalaryHistory() {
+  let salaries = buildSalaryHistory();
+  let month = $("#month").val();
+  $.ajax({
+    method: "POST",
+    url: document.location.href + '/save',
+    data: { data: salaries, month: month },
+    success: () => {
+      window.location.href = window.location.href + "/history";
+    }
+  });
+}
 $('.datepicker').datepicker({
     format: 'yyyy-mm-dd',
     startDate: '-3d'

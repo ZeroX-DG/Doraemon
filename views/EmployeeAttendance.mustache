@@ -10,13 +10,13 @@
         <h1 class="text-center" id="tbl_quanly">Chấm công</h1>
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
-                
+                <div class="distance" style="background: red; padding: 10px; color: white"></div>
                 {{#shift}}
                     <form method="POST">
                         <h3>{{Name}}</h3>
                         <h3>Từ {{Time_start}} đến {{Time_end}}</h3>
                         <input type="hidden" value="{{Id}}" name="ShiftId">
-                        <input class="btn btn-info btn-block btn-lg" type="submit" value="Điểm danh">
+                        <input class="btn btn-info btn-block btn-lg" id="takeAttendance" type="submit" value="Điểm danh">
                     </form>
                 {{/shift}}
                 {{^shift}}
