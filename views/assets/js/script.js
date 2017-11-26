@@ -409,6 +409,42 @@ function sendSalaryHistory() {
     }
   });
 }
+$(".scheduleShift").click(function() {
+	let checkBox = $(this);
+	let scheduleId = checkBox.data("scheduleid");
+	let dayOfWeek = checkBox.data("date");
+	let shift = checkBox.data("shiftid");
+	let employeeId = checkBox.data("userid");
+	let url = document.location.href.split("/");
+	url.splice(-2, 2);
+	url = url.join("/");
+	if(checkBox.prop("checked")) {
+		$.ajax({
+			method: "POST",
+			url: url + '/shift/add',
+			data: { scheduleId, dayOfWeek, shift, employeeId },
+			success: (mes) => {
+				if(mes.indexOf("bạn không có quyền vào trang này") != -1) {
+					alert("bạn không có quyền chỉnh sửa lich");
+					checkBox.prop("checked", false);
+				}
+			}
+		});
+	}
+	else {
+		$.ajax({
+			method: "POST",
+			url: url + '/shift/delete',
+			data: { scheduleId, dayOfWeek, shift, employeeId },
+			success: (mes) => {
+				if(mes.indexOf("bạn không có quyền vào trang này") != -1) {
+					alert("bạn không có quyền chỉnh sửa lich");
+					checkBox.prop("checked", false);
+				}
+			}
+		});
+	}
+});
 $('.datepicker').datepicker({
     format: 'yyyy-mm-dd',
     startDate: '-3d'

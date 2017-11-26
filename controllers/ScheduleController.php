@@ -156,8 +156,41 @@ class ScheduleController{
     }
 	}
 
-	public function details() {
+	public function details($scheduleId = null) {
+		$scheduleInfo = null;
+		$schedules = Schedules::all()->toArray();
+	
+		if(count($schedules) == 0){
+			if($_SESSION['Role'] == ADMIN_ROLE){
+				return View("AddSchedule", ["isAdmin" => true]);
+			}
+		}
+		if($scheduleId == null){
+			// if there's no schedule id 
+			// then get the latest one !
+			$scheduleInfo = Schedules::orderBy('id', 'desc')->first();
+		}
+		else{
+			$scheduleInfo = Schedules::find($scheduleId);
+		}	
 		
+		if($scheduleInfo){
+			$scheduleInfo = $scheduleInfo->toArray();
+		}
+		else{
+			echo "lịch không tồn tại";
+			return;
+		}
+		$data = [];
+		for($i = 2; $i < 9; $i++){
+			array_push($data, ["Id" => $i]);
+		}
+		return View("ScheduleDetails", [
+			"isAdmin" => true,
+			"scheduleInfo" => $scheduleInfo,
+			"otherSchedule" => $schedules,
+			"data" => $data
+		]);
 	}
 
 	public function detailOfDate($scheduleId, $date) {
@@ -173,7 +206,11 @@ class ScheduleController{
 		// so that when we render we will get a nice array of array of boolean
 		$users = Users::all();
 		$shifts = Shifts::all();
+		$schedule_begin_date = Schedules::where('Id', '=', $scheduleId)
+																		->first()->Date_start;
+		$time = date("Y-m-d", strtotime($schedule_begin_date . " +".($date - 2)." days"));
 		$arrayOfBooleans = [];
+
 		foreach($users as $user) {
 			$arrayOfShifts = [];
 			$arrayOfBoolean = [];
@@ -232,9 +269,13 @@ class ScheduleController{
 		$shiftCount = count($shifts);
 		return View("ScheduleDetailsOfDate", [
 			'isAdmin' => true, 
+			'dayOfWeek' => $date,
+			'date' => date("d", strtotime($time)),
+			'month' => date("m", strtotime($time)),
 			'data'=>$arrayOfBooleans,
 			'shiftCount' => $shiftCount,
-			'shifts' => $shifts
+			'shifts' => $shifts,
+			'scheduleId' => $scheduleId
 		]);
 	}
 }

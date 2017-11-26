@@ -8,7 +8,7 @@
   {{/isAdmin}}
   <div>
     <div class="col-md-12 text-center">
-      <h3>Lịch làm việc ngày thứ 2 (10/10)</h3>
+      <h3>Lịch làm việc ngày thứ {{dayOfWeek}} ({{date}}/{{month}})</h3>
     </div>
     
       <table class="table table-bordered table-hover">
@@ -31,10 +31,10 @@
             <td>{{AttendanceHour}}</td>
             {{#checkState}}
               {{#state}}
-              <td><input type="checkbox" data-userid="{{user.Id}}" data-shiftid="{{Id}}" checked></td>
+              <td><input type="checkbox" class="scheduleShift" data-scheduleid="{{scheduleId}}" data-date="{{dayOfWeek}}" data-userid="{{user.Id}}" data-shiftid="{{id}}" checked></td>
               {{/state}}
               {{^state}}
-              <td><input type="checkbox" data-userid="{{user.Id}}" data-shiftid="{{Id}}"></td>
+              <td><input type="checkbox" class="scheduleShift" data-scheduleid="{{scheduleId}}" data-date="{{dayOfWeek}}" data-userid="{{user.Id}}" data-shiftid="{{id}}"></td>
               {{/state}}
             {{/checkState}}
           </tr>

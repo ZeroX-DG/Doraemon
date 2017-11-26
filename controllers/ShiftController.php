@@ -93,14 +93,16 @@ class ShiftController{
 
 	public function deleteShiftFromSchedule(){
     if(havePermission(5)){
-  		$uid     = $_POST['uid'];
-  		$shiftId = $_POST['shiftId'];
-  		$date    = $_POST['date'];
+  		$scheduleId = $_POST['scheduleId'];
+  		$dayOfWeek  = $_POST['dayOfWeek'];
+  		$shift      = $_POST['shift'];
+  		$employeeId = $_POST['employeeId'];
   		if($_SESSION['Role'] == ADMIN_ROLE){
-  			Schedule_details::where('Date', '=', $date)
-  							->where('ShiftId', '=', $shiftId)
-  							->where('UserId', '=', $uid)
-  							->delete();
+  			Schedule_details::where("Schedule_id", "=", $scheduleId)
+												->where("DayOfWeek", "=", $dayOfWeek)
+												->where("ShiftId", "=", $shift)
+												->where("UserId", "=", $employeeId)
+  											->delete();
   			echo "success";
   		}
   		else{
@@ -168,6 +170,7 @@ class ShiftController{
   		}
     }		
     else{
+			echo $_SESSION['Uid'];
       echo "bạn không có quyền vào trang này";
     }
 	}

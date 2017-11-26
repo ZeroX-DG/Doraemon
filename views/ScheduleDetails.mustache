@@ -46,6 +46,16 @@
           </tr>
         </thead>
         <tbody>
+          <tr>
+          {{#data}}
+            <td class="text-center">
+              <a 
+                href="{{base_path}}/schedules/{{scheduleInfo.Id}}/{{Id}}"
+                class="btn btn-info"
+              >Xem chi tiet</a>
+            </td>  
+          {{/data}}
+          </tr>
         </tbody>
       </table>
     </div>
