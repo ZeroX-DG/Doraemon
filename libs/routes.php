@@ -46,6 +46,10 @@ $router->mount('/schedules', function() use ($router){
 	$router->get('/shift/find/(\d+)/(\d+)/(\d+)', 'ShiftController@find');
 });
 
+$router->mount('/employeeSchedule', function() use ($router){
+  $router->get('/', 'ScheduleController@showEmployeeSchedule');
+});
+
 $router->mount('/account', function() use ($router){
 	$router->get('/', 'AccountController@Index');
 	$router->get('/add', 'AccountController@Add');

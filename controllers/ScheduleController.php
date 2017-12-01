@@ -278,5 +278,41 @@ class ScheduleController{
 			'scheduleId' => $scheduleId
 		]);
 	}
+
+  public function showEmployeeSchedule($scheduleId = null) {
+    /*
+    response data
+    [
+      [Shift, [mon=>[], tue=>[], wen=>[]]]
+    ]
+    */
+    // first get all the shifts
+    // loop through them
+    // find list of date from mon -> sun of that shift
+    // push to array
+    // return it
+    if($scheduleId == null) {
+      $scheduleId = Schedules::all()->last()->Id;
+    }
+    $data = [];
+    $shifts = Shifts::all();
+    foreach($shifts as $shift) {
+      $userList = [];
+      $schedule_details = Schedule_details::where('Schedule_id', $scheduleId)
+                                          ->where('ShiftId', $shift->Id)
+                                          ->orderBy('DayOfWeek')
+                                          ->get();
+      $userOfDay = [];
+      foreach($schedule_details as $detail) { 
+        $user = Users::where('Id', '=', $detail->UserId)->first();
+        array_push($userOfDay, ["name" => $user->DisplayName]);      
+      }
+      array_push($userList, [
+       "usersOfDay" => $userOfDay
+      ]);
+      array_push($data, ["shift" => $shift->Name, "users" => $userList]);
+    }
+    return View("viewWeekSchedule", ["isAdmin" => false, "data" => $data]);
+  }
 }
 ?>

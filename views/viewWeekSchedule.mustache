@@ -1,0 +1,41 @@
+{{> head}}
+<body>
+  {{#isAdmin}}
+  {{> AdminNav}}
+  {{/isAdmin}}
+  {{^isAdmin}}
+  {{> EmployeeNav}}
+  {{/isAdmin}}
+  <h1>Lịch làm việc của tuần </h1>
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th> </th>
+          <th>Thứ 2</th>
+          <th>Thứ 3</th>
+          <th>thứ 4</th>
+          <th>Thứ 5</th>
+          <th>Thứ 6</th>
+          <th>Thứ 7</th>
+          <th>Chủ Nhật</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#data}}
+        <tr>
+          <td>{{shift}}</td>
+          {{#users}}
+            <td>
+            {{#usersOfDay}}
+              {{name}}<br>
+            {{/usersOfDay}}
+            </td>
+          {{/users}}
+        </tr>
+        {{/data}}
+      </tbody>
+    </table>
+  </div>
+</body>
+{{> bottom}}
