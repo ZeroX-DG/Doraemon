@@ -200,7 +200,7 @@ $(".deleteProdcutBtn").click(function(e){
 	let id = $(this).data("id");
 	$.ajax({
 		method: "POST",
-		url: document.location.href + '/delete',
+		url: document.location.href + '/product/delete',
 		data: { Id: id },
 		success: function(mes) {
 			if(mes.indexOf("done") != -1){
@@ -277,10 +277,12 @@ $(".acceptShip").click(function(e){
 });
 $(".importBtn").click(function(){
 	$("#importProductModal").find(".productId").val($(this).data("id"));
+  $("#importProductModal").find("#name").val($(this).data("name"));
 });
 
 $(".exportBtn").click(function(){
 	$("#exportProductModal").find(".productId").val($(this).data("id"));
+  $("#exportProductModal").find("#name").val($(this).data("name"));
 });
 //------------------------------
 // Permission management
@@ -389,9 +391,9 @@ function buildSalaryHistory() {
     let dom = $(i);
     let uid = dom.attr("id");
     let work_hour = dom.find(".AttendanceHour").text().trim();
-    let salary_by_hour = dom.find(".salaryByHour").val().trim().replace(".", "") || 0;
-    let bonus = dom.find(".bonusSalary").val().trim().replace(".", "") || 0;
-    let cash_advance = dom.find(".cashAdvance").val().trim().replace(".", "") || 0;
+    let salary_by_hour = dom.find(".salaryByHour input").val().trim().replace(".", "") || 0;
+    let bonus = dom.find(".bonusSalary input").val().trim().replace(".", "") || 0;
+    let cash_advance = dom.find(".cashAdvance input").val().trim().replace(".", "") || 0;
     let total_salary = dom.find(".totalSalary").text().trim().replace(",", "").replace(" vnđ", "") || 0;
     result.push({uid, work_hour, salary_by_hour, bonus, cash_advance, total_salary});
   }
@@ -445,6 +447,15 @@ $(".scheduleShift").click(function() {
 		});
 	}
 });
+
+$(".amount input").keyup(function(){
+  let amount = parseInt($(this).val().replace(".", "")) || 0;
+  let price = parseFloat($(this).parent().siblings(".price").html().replace(",", "")) || 0;
+  let total = numberWithCommas(amount * price);
+  $(this).parent().siblings(".total").html(total + " vnđ");
+});
+
+
 $('.datepicker').datepicker({
     format: 'yyyy-mm-dd',
     startDate: '-3d'

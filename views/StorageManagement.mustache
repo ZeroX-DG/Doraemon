@@ -1,65 +1,161 @@
 {{> head}}
 <body>
-    {{#isAdmin}}
-        {{> AdminNav}}
-    {{/isAdmin}}
-    {{^isAdmin}}
-        {{> EmployeeNav}}
-    {{/isAdmin}}
-    <a href="{{base_path}}/storage/add" class="btn btn-info">Thêm kho</a>
-    <div class="table-responsive">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Tên kho</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#storages}}
-                <tr>
-                    <td>{{Name}}</td>
-                    <td>
-                        <a href="{{base_path}}/storage/{{Id}}" class="btn btn-info">Xem thêm</a>
-                        <button data-target="#deleteStorageModal" data-toggle="modal" class="btn btn-danger" data-id="{{Id}}">Xóa</button>
-                        <a href="{{base_path}}/storage/{{Id}}/edit" class="btn btn-info">Sửa</a>
-                    </td>
-                </tr>
-                {{/storages}}
-            </tbody>
-        </table>
-    </div>
-    <div class="modal fade" id="cannotdelete" role="dialog">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Không thể xóa kho !</h4>
-                </div>
-                <div class="modal-body">
-                    <p>Không thể xóa kho !</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
-                </div>
-            </div>
+  {{#isAdmin}}
+  {{> AdminNav}}
+  {{/isAdmin}}
+  {{^isAdmin}}
+  {{> EmployeeNav}}
+  {{/isAdmin}}
+  <a href="{{base_path}}/storage/product/add" class="btn btn-info">Thêm sản phẩm</a>
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>tên hàng</th>
+          <th>kho nhà</th>
+          <th>kho quán</th>
+          <th>đơn giá</th>
+          {{#isAdmin}}
+          <th>cần nhập</th>
+          <th>số lượng lấy</th>
+          <th>tổng tiền</th>
+          {{/isAdmin}}
+          <th>thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#data}}
+        <tr>
+          <td>{{product_name}}</td>
+          <td>{{product_amount_storage_1}}</td>
+          <td>{{product_amount_storage_2}}</td>
+          <td class="price">{{product_price}} vnđ</td>
+          {{#isAdmin}}
+          <td><input type="checkbox" /></td>
+          <td class="amount">
+            <input type="number" class="form-control" onkeyup="oneDot(this)">
+          </td>
+          <td class="total">0 vnđ</td>
+          {{/isAdmin}}
+          <td>
+            <button class="btn btn-success exportBtn" type="button" data-target="#exportProductModal" data-toggle="modal" data-name="{{product_name}}" data-id="{{product_id}}">Xuất </button>
+            &nbsp;&nbsp;
+            <button class="btn btn-info importBtn" type="button" data-target="#importProductModal" data-toggle="modal" data-name="{{product_name}}" data-id="{{product_id}}">Nhập </button>
+            &nbsp;&nbsp;
+            <button class="btn btn-danger" data-target="#deleteProductModal" data-toggle="modal" data-name="{{product_name}}" data-id="{{product_id}}" type="button">Xóa </button>
+            &nbsp;&nbsp;
+            <a href="{{base_path}}/storage/product/edit/{{product_id}}" class="btn btn-info">
+              Sửa
+            </a>
+          </td>
+        </tr>
+        {{/data}}
+      </tbody>
+    </table>
+  </div>
+  <div class="modal fade" id="cannotdelete" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Lỗi</h4>
         </div>
-    </div>
-    <div class="modal fade" id="deleteStorageModal" role="dialog">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Xóa kho này ?</h4>
-                </div>
-                <div class="modal-body">
-                    <p>Bạn có chắc muốn xóa kho này ? tất cả mọi thứ về kho sẽ mất !</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger deleteStorageBtn" data-dismiss="modal">Xóa</button>
-                </div>
-            </div>
+        <div class="modal-body">
+          <p>Không thể xóa sản phẩm !</p>
         </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="modal fade" id="deleteProductModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Cảnh báo</h4>
+        </div>
+        <div class="modal-body">
+          <p>Bạn có chắc chắn muốn xóa sản phẩm này?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger deleteProdcutBtn" data-dismiss="modal">Xóa</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="importProductModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Nhập hàng</h4>
+        </div>
+        <div class="modal-body">
+          <form method="post">
+            <label for="name">tên hàng</label>
+            <input class="form-control" type="text" id="name" readonly name="name" />
+            <label for="amount">Số lượng</label>
+            <input class="form-control" type="number" name="amount" />
+            <label for="amount">Kho</label>
+            <select name="storage" id="storage" class="form-control">
+              {{#storages}}
+                <option value="{{Id}}">{{Name}}</option>
+              {{/storages}}
+            </select>
+            <label for="date">Ngày nhập</label>
+            <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+              <input type="text" class="form-control" id="date" name="import_date">
+              <div class="input-group-addon">
+                <i class="fa fa-chevron-down" aria-hidden="true"></i>
+              </div>
+            </div>
+            <input type="hidden" name="Id" class="productId"/>
+            <input type="hidden" name="act" value="import" />
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-info">Nhập</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="exportProductModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Xuất hàng</h4>
+        </div>
+        <div class="modal-body">
+          <form method="post">
+            <label for="name">tên hàng</label>
+            <input class="form-control" type="text" id="name" readonly name="name" />
+            <label for="amount">Số lượng</label>
+            <input class="form-control" type="number" name="amount" />
+            <label for="amount">Kho</label>
+            <select name="storage" id="storage" class="form-control">
+              {{#storages}}
+                <option value="{{Id}}">{{Name}}</option>
+              {{/storages}}
+            </select>
+            <label for="date">Ngày xuất</label>
+            <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+              <input type="text" class="form-control" id="date" name="import_date">
+              <div class="input-group-addon">
+                <i class="fa fa-chevron-down" aria-hidden="true"></i>
+              </div>
+            </div>
+            <input type="hidden" name="Id" class="productId"/>
+            <input type="hidden" name="act" value="export" />
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-info">Xuất</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 {{> bottom}}

@@ -6,12 +6,39 @@ use Model\StorageImport;
 use Model\StorageExport;
 class StorageController{
 	public function Index(){
-		$Storages = Storages::all();
-		return View("StorageManagement", [
-			"isAdmin" => $_SESSION['Role'] == ADMIN_ROLE,
-			"storages" => $Storages
-		]);
+		$Products = Products::all();
+    $storages = Storages::all();
+		$data = [];
+    foreach($Products as $product) {
+      $product_details = [];
+      $product_details["product_name"] = $product->Name;
+      $product_details["product_price"] = number_format($product->Price);
+      $product_details["product_id"] = $product->Id;
+      // so luong kho nha
+      $product_details["product_amount_storage_1"] = 
+        $this::getProductAmountInStorage($product->Id, "kho nhà");
+      // so luong kho quan
+      $product_details["product_amount_storage_2"] = 
+        $this::getProductAmountInStorage($product->Id, "kho quán");
+
+      array_push($data, $product_details);
+    }
+    return View("StorageManagement", [
+      "isAdmin" => $_SESSION['Role'] == ADMIN_ROLE,
+      "data" => $data,
+      "storages" => $storages
+    ]);
 	}
+
+  public function getProductAmountInStorage($productId, $storageName){
+    $data = [];
+    $storageId = Storages::whereRaw("LOWER(Name) = ?", $storageName)->first()->Id;
+    $product = StorageContent::where("StorageId", "=", $storageId)
+              ->where("ProductId", "=", $productId)
+              ->first();
+    $productAmount = isset($product->Amount) ? $product->Amount : 0;
+    return $productAmount;
+  }
 
 	function deleteStorage()
 	{
@@ -20,85 +47,55 @@ class StorageController{
 		echo "done";
 	}
 
-	public function showContent($id){
-		$data = [];
-		$storageContent = StorageContent::where("StorageId", "=", $id)
-										->get()
-										->toArray();
-		foreach ($storageContent as $content) {
-			$product = Products::find($content["ProductId"]);
-			$content["ProductName"] = $product->Name;
-			$content["ProductId"] = $product->Id;
-			array_push($data, $content);
-		}
-		return View("StorageContent", [
-			"isAdmin" => $_SESSION['Role'] == ADMIN_ROLE,
-			"content" => $data,
-			"storageId" => $id
-		]);
-	}
-
-	public function deleteProduct($storageId){
+	public function deleteProduct(){
 		$id = $_POST['Id'];
-		StorageContent::where("Id", "=", $storageId)
-						->where("ProductId", "=", $id)
-						->delete();
+		Products::where('Id', '=', $id)->delete();
 		echo "done";
 	}
 
 	public function viewAddProduct(){
-		return View("AddProductToStorange",["isAdmin" => $_SESSION['Role'] == ADMIN_ROLE]);
+		return View("AddProductToStorange",[
+      "isAdmin" => $_SESSION['Role'] == ADMIN_ROLE
+    ]);
 	}
 
-	public function addProduct($storageId){
+	public function addProduct(){
 		$productName = $_POST['name'];
+    $productPrice = $_POST['price'];
 		$product = Products::where('Name', '=', $productName)->first();
 
-		$productId = null;
 		if($product == null){
 			$newProduct = new Products;
 			$newProduct->Name = $productName;
+      $newProduct->Price = $productPrice;
 			$newProduct->save();
-			$productId = $newProduct->Id;
 		}
 		else{
-			$productId = $product->Id;
+			return View("AddProductToStorange",[
+        "isAdmin" => $_SESSION['Role'] == ADMIN_ROLE,
+        "message" => "sản phẩm đã tồn tại !"
+      ]);
 		}
-		$current_content = StorageContent::where('StorageId', '=', $storageId)
-									->where('ProductId', '=', $productId)
-									->first();
-		if($current_content == null){
-			$content = new StorageContent;
-			$content->StorageId = $storageId;
-			$content->ProductId = $productId;
-			$content->Amount = 0;
-			$content->save();
-		}
-		else{
-			$current_content->Amount = $current_content->Amount + 0;
-			$current_content->save();
-		}
-		redirect('/storage/'.$storageId);
+		redirect('/storage');
 	}
 
-	public function viewEditProduct($storageId, $productId){
-		$content = StorageContent::where('StorageId', '=', $storageId)
-									->where('ProductId', '=', $productId)
-									->first();
+	public function viewEditProduct($productId){
 		$product = Products::find($productId);
 		return View('editProductInStorange', [
-			"amount" => $content->Amount,
+			"price" => $product->Price,
 			"name" => $product->Name,
 			"isAdmin" => $_SESSION['Role'] == ADMIN_ROLE
 		]);
 	}
 
-	public function EditProduct($storageId, $productId){
+	public function EditProduct($productId){
 		$productName = $_POST['name'];
+    $productPrice = str_replace(".", "", $_POST['price']);
 		$product = Products::find($productId);
 		$product->Name = $productName;
+    $product->Price = $productPrice;
 		$product->save();
-		redirect('/storage/'.$storageId);
+    redirect('/storage');
 	}
 
 	public function viewAddStorage(){
@@ -139,9 +136,19 @@ class StorageController{
 		$content = StorageContent::where('StorageId', '=', $storageId)
 									->where('ProductId', '=', $productId)
 									->first();
-		$content->Amount = $content->Amount + (int) $amount;
-		$content->save();
-		redirect('/storage/'.$storageId);
+
+    if(isset($content)) {
+  		$content->Amount = $content->Amount + (int) $amount;
+  		$content->save();
+    }
+    else {
+      $storageContent = new StorageContent;
+      $storageContent->StorageId = $storageId;
+      $storageContent->ProductId = $productId;
+      $storageContent->Amount = $amount;
+      $storageContent->save();
+    }
+		redirect('/storage');
 	}
 
 	public function exportProduct($storageId, $productId, $date, $amount){
@@ -155,12 +162,22 @@ class StorageController{
 		$content = StorageContent::where('StorageId', '=', $storageId)
 									->where('ProductId', '=', $productId)
 									->first();
-		$content->Amount = $content->Amount - (int) $amount;
-		$content->save();
-		redirect('/storage/'.$storageId);
+		if(isset($content)) {
+      $content->Amount = $content->Amount - (int) $amount;
+      $content->save();
+    }
+    else {
+      $storageContent = new StorageContent;
+      $storageContent->StorageId = $storageId;
+      $storageContent->ProductId = $productId;
+      $storageContent->Amount = $amount;
+      $storageContent->save();
+    }
+		redirect('/storage');
 	}
 
-	public function importAndExportProduct($storageId){
+	public function importAndExportProduct(){
+    $storageId = $_POST['storage'];
 		$productId = $_POST['Id'];
 		$date = $_POST['import_date'];
 		$amount = $_POST['amount'];

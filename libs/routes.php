@@ -61,18 +61,18 @@ $router->mount('/account', function() use ($router){
 
 $router->mount('/storage', function() use ($router){
 	$router->get('/', 'StorageController@Index');
-	$router->get('/(\d+)', 'StorageController@ShowContent');
-	$router->post('/(\d+)/delete', 'StorageController@deleteProduct');
-	$router->get('/(\d+)/add', 'StorageController@viewAddProduct');
-	$router->post('/(\d+)/add', 'StorageController@addProduct');
-	$router->get('/(\d+)/edit/(\d+)', 'StorageController@viewEditProduct');
-	$router->post('/(\d+)/edit/(\d+)', 'StorageController@EditProduct');
+	//$router->get('/(\d+)', 'StorageController@ShowContent');
+	$router->post('/product/delete', 'StorageController@deleteProduct');
+	$router->get('/product/add', 'StorageController@viewAddProduct');
+	$router->post('/product/add', 'StorageController@addProduct');
+	$router->get('/product/edit/(\d+)', 'StorageController@viewEditProduct');
+	$router->post('/product/edit/(\d+)', 'StorageController@EditProduct');
 	$router->post('/delete', 'StorageController@deleteStorage');
 	$router->get('/add', 'StorageController@viewAddStorage');
 	$router->post('/add', 'StorageController@AddStorage');
 	$router->get('/(\d+)/edit', 'StorageController@ViewEditStorage');
 	$router->post('/(\d+)/edit', 'StorageController@EditStorage');
-	$router->post('/(\d+)', 'StorageController@importAndExportProduct');
+	$router->post('/', 'StorageController@importAndExportProduct');
 });
 
 $router->get('/storageHistory', 'StorageController@history');

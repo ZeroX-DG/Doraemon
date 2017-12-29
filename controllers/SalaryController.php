@@ -85,6 +85,10 @@ class SalaryController{
       foreach($raw as $record) {
         $user = Users::where('Id', '=', $record['userId'])->first();
         $record['userName'] = $user->DisplayName;
+        $record['salary_by_hour'] = number_format($record['salary_by_hour']) . ' vnđ';
+        $record['bonus'] = number_format($record['bonus']) . ' vnđ';
+        $record['cash_advance'] = number_format($record['cash_advance']) . ' vnđ';
+        $record['total_salary'] = number_format($record['total_salary']) . ' vnđ';
         array_push($data, $record);
       }
 
