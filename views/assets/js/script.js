@@ -455,6 +455,70 @@ $(".amount input").keyup(function(){
   $(this).parent().siblings(".total").html(total + " vnđ");
 });
 
+function getSaveStorageData(){
+  let listOfProduct = $(".product");
+  let data = [];
+    listOfProduct.each(function(index, item){
+    let obj = {};
+    let current = $(item);
+    let total = current.find(".total").text();
+    let productName = current.find(".productName").text();
+    let price = current.find(".price").text();
+    let amount = current.find(".amount input").val();
+    let isHomeStorage = current.find("#home").prop("checked");
+    let isWorkStorage = current.find("#work").prop("checked");
+    if (isHomeStorage || isWorkStorage && amount != "") {
+      obj.productId = current.attr("id");
+      obj.productName = productName;
+      obj.amount = amount;
+      obj.price = price;
+      obj.total = total;
+      obj.isHomeStorage = isHomeStorage;
+      obj.isWorkStorage = isWorkStorage;
+      data.push(obj);
+    }
+  });
+  return data;
+}
+
+function buildImportListHtml(data) {
+  let html = "";
+  for (let i = 0; i < data.length; i++) {
+    let current = data[i];
+    html += "<tr id=" + current.productId + ">";
+    html += "<td>" + current.productName + "</td>";
+    html += "<td>" + current.price + "</td>";
+    let storages = 
+      (current.isHomeStorage ? "kho nhà <br>" : "") + 
+      (current.isWorkStorage ? "kho quán" : "");
+    html += "<td>" + storages + "</td>";
+    html += "<td>" + current.amount + "</td>";
+    html += "<td>" + current.total + "</td>";
+    html += "<td><button class='btn btn-danger' onclick='removeFromImportList(this)'>bỏ nhập</button></td>";
+    html += "</tr>";
+  }
+  return html;
+}
+
+function addToImportList() {
+  let data = getSaveStorageData();
+  let html = buildImportListHtml(data);
+  $("#importList").html(html);
+}
+
+function removeFromImportList(e) {
+  let id = $($(e).parent().parent()).attr("id");
+  let productTd = $("#productList #" + id);
+  productTd.find("input[type=checkbox]").prop("checked", false);
+  productTd.find(".amount input").val("");
+  addToImportList();
+}
+
+function importProduct() {
+  let data = getSaveStorageData();
+  //console.log(JSON.stringify(data));
+  window.location.href = document.location.href + '/product/import?data=' + JSON.stringify(data);
+}
 
 $('.datepicker').datepicker({
     format: 'yyyy-mm-dd',

@@ -8,7 +8,7 @@
   {{/isAdmin}}
   <a href="{{base_path}}/storage/product/add" class="btn btn-info">Thêm sản phẩm</a>
   <div class="table-responsive">
-    <table class="table table-bordered">
+    <table class="table table-bordered" id="productList">
       <thead>
         <tr>
           <th>tên hàng</th>
@@ -17,7 +17,7 @@
           <th>đơn giá</th>
           {{#isAdmin}}
           <th>cần nhập</th>
-          <th>số lượng lấy</th>
+          <th>số lượng nhập</th>
           <th>tổng tiền</th>
           {{/isAdmin}}
           <th>thao tác</th>
@@ -25,13 +25,16 @@
       </thead>
       <tbody>
         {{#data}}
-        <tr>
-          <td>{{product_name}}</td>
+        <tr class="product" id="{{product_id}}">
+          <td class="productName">{{product_name}}</td>
           <td>{{product_amount_storage_1}}</td>
           <td>{{product_amount_storage_2}}</td>
           <td class="price">{{product_price}} vnđ</td>
           {{#isAdmin}}
-          <td><input type="checkbox" /></td>
+          <td>
+            <input type="checkbox" id="home" /> Kho nhà <br>
+            <input type="checkbox" id="work" /> Kho quán
+          </td>
           <td class="amount">
             <input type="number" class="form-control" onkeyup="oneDot(this)">
           </td>
@@ -39,8 +42,6 @@
           {{/isAdmin}}
           <td>
             <button class="btn btn-success exportBtn" type="button" data-target="#exportProductModal" data-toggle="modal" data-name="{{product_name}}" data-id="{{product_id}}">Xuất </button>
-            &nbsp;&nbsp;
-            <button class="btn btn-info importBtn" type="button" data-target="#importProductModal" data-toggle="modal" data-name="{{product_name}}" data-id="{{product_id}}">Nhập </button>
             &nbsp;&nbsp;
             <button class="btn btn-danger" data-target="#deleteProductModal" data-toggle="modal" data-name="{{product_name}}" data-id="{{product_id}}" type="button">Xóa </button>
             &nbsp;&nbsp;
@@ -52,6 +53,27 @@
         {{/data}}
       </tbody>
     </table>
+    {{#isAdmin}}
+    <button class="btn btn-info" onclick="addToImportList()" type="button" style="float: right; margin-right: 10px; clear: both">thêm vào danh sách</button>
+    <br>
+    <br>
+    <h1>danh sách cần nhập</h1>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>tên hàng</th>
+          <th>đơn giá</th>
+          <th>nhập vào</th>
+          <th>số lượng nhập</th>
+          <th>tổng tiền</th>
+          <th>thao tác</th>
+        </tr>
+      </thead>
+      <tbody id="importList">
+      </tbody>
+    </table>
+    <button class="btn btn-info" onclick="importProduct()" type="button" style="float: right; margin-right: 10px; clear: both">cập nhật</button>
+    {{/isAdmin}}
   </div>
   <div class="modal fade" id="cannotdelete" role="dialog">
     <div class="modal-dialog modal-sm">

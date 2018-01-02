@@ -125,6 +125,68 @@ class StorageController{
 		redirect('/storage');
 	}
 
+  public function newImport() {
+    $data = json_decode($_GET['data']);
+    foreach($data as $record) {
+      $listStorage = [];
+      $record = (array)$record;
+      if ($record['isWorkStorage']) {
+        $id = Storages::where('Name', '=', 'Kho quán')->first()->Id;
+        array_push($listStorage, $id);
+      }
+      if ($record['isHomeStorage']) {
+        $id = Storages::where('Name', '=', 'Kho nhà')->first()->Id;
+        array_push($listStorage, $id);
+      }
+      
+      foreach ($listStorage as $storageId) {
+        $this->importProduct(
+          $storageId, $record['productId'], date('Y-m-d'), $record['amount']
+        );
+      }
+    }
+    $columnHeader = '';
+    $columnHeader = '"tên hàng"' . "\t" . '"đơn giá"' . "\t" . '"nhập vào"' . "\t" . '"số lượng nhập"' . "\t" . '"tổng tiền"' . "\n";
+    $setData = '';
+    //$setData .= $columnHeader;
+    foreach($data as $record) {
+      $storages = '';
+      $record = (array)$record;
+      if ($record['isWorkStorage']) {
+        $storages .= 'kho quán';
+      }
+      if ($record['isWorkStorage'] && $record['isHomeStorage']) {
+        $storages .= ',';
+      }
+      if ($record['isHomeStorage']) {
+        $storages .= 'kho nhà';
+      }
+      $rowData = 
+        '"' . 
+        $record['productName'] . 
+        '"' . "\t" .
+        '"' .
+        $record['price'] .
+        '"' . "\t" .
+        '"' .
+        $storages .
+        '"' . "\t" .
+        '"' .
+        $record['amount'] .
+        '"' . "\t" .
+        '"' .
+        $record['total'] .
+        '"' . "\n";
+      $setData .= $rowData;
+    }
+    header("Content-type: application/octet-stream");  
+    header("Content-Disposition: attachment; filename=result.xls");  
+    header("Pragma: no-cache");  
+    header("Expires: 0");
+    echo "\n" . $columnHeader  . "\n" . $setData . "\n";
+    //redirect("/storage");
+  }
+
 	public function importProduct($storageId, $productId, $date, $amount){
 		$import = new StorageImport;
 		$import->StorageId = $storageId;
@@ -148,7 +210,7 @@ class StorageController{
       $storageContent->Amount = $amount;
       $storageContent->save();
     }
-		redirect('/storage');
+		//redirect('/storage');
 	}
 
 	public function exportProduct($storageId, $productId, $date, $amount){

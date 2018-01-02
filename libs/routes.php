@@ -73,6 +73,7 @@ $router->mount('/storage', function() use ($router){
 	$router->get('/(\d+)/edit', 'StorageController@ViewEditStorage');
 	$router->post('/(\d+)/edit', 'StorageController@EditStorage');
 	$router->post('/', 'StorageController@importAndExportProduct');
+  $router->get('/product/import', 'StorageController@newImport');
 });
 
 $router->get('/storageHistory', 'StorageController@history');
