@@ -44,6 +44,7 @@ $router->mount('/schedules', function() use ($router){
 	$router->post('/shift/delete', 'ShiftController@deleteShiftFromSchedule');
 	$router->post('/shift/add', 'ShiftController@addShiftToSchedule');
 	$router->get('/shift/find/(\d+)/(\d+)/(\d+)', 'ShiftController@find');
+  $router->get('/details/(\d+)', 'ScheduleController@viewScheduleDetails');
 });
 
 $router->mount('/employeeSchedule', function() use ($router){

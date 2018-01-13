@@ -181,6 +181,9 @@ class ScheduleController{
 			echo "lịch không tồn tại";
 			return;
 		}
+    if ($_SESSION['Role'] != ADMIN_ROLE) {
+      return $this->viewScheduleDetails($scheduleInfo["Id"]); 
+    }
 		$data = [];
 		for($i = 2; $i < 9; $i++){
 			array_push($data, ["Id" => $i]);
@@ -192,6 +195,41 @@ class ScheduleController{
 			"data" => $data
 		]);
 	}
+
+  public function viewScheduleDetails($schedule_id) {
+    /* 
+    data = [
+      "shifts" => [
+        "name" => "ca sang",
+        "content" => [
+          "t2" => [asdasd, asdasd, adsadasd], // each day
+          "t3" => [asasd, asdasd, asdasd]
+        ]
+      ]
+    ]
+    */
+    $shifts = Shifts::all();
+    $data = [];
+    foreach($shifts as $shift) {
+      $shiftData = [];
+      $shiftData["name"] = $shift->Name;
+      $shiftData["content"] = [];
+      for($day = 2; $day < 9; $day++) {
+        $shiftInDay = Schedule_details::where('Schedule_id', '=', $schedule_id)
+                                      ->where('DayOfWeek', '=', $day)
+                                      ->where('ShiftId', '=', $shift->Id)
+                                      ->get();
+        $employees = [];
+        foreach($shiftInDay as $item) {
+          $employee = Users::where('Id', '=', $item->UserId)->first();
+          array_push($employees, $employee->DisplayName);
+        }
+        $shiftData["content"]["t" . $day] = implode("<br><br>" ,$employees);
+      }
+      array_push($data, $shiftData);
+    }
+    return View("WeekSchedule", ["isAdmin" => true, "data" => $data]);
+  }
 
 	public function detailOfDate($scheduleId, $date) {
 		// plan:
