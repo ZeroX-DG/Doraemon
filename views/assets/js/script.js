@@ -58,26 +58,41 @@ $(".checkBtn").click(function(e){
 	var date = e.target.dataset["date"];
 	var uid = e.target.dataset["uid"];
 	var shiftId = e.target.dataset["shiftid"];
+	var parent = $(e.target).parent().parent();
+	var time_in_hour = parent.find(".time_in_hour").val();
+	var time_in_minute = parent.find(".time_in_minute").val();
+	var time_out_hour = parent.find(".time_out_hour").val();
+	var time_out_minute = parent.find(".time_out_minute").val();
+	var statusDOM = parent.find(".status");
+	var status = "";
+	for (var i = 0; i < statusDOM.length; i++) {
+		if ($(statusDOM[i]).prop("checked")) {
+			status = $(statusDOM[i]).val();
+		}
+	}
+	var note = parent.find(".note").val();
 	var button = $(this);
 	var text = $(button.parent().parent().children()[2]);
 	$.ajax({
 		method: "POST",
 		url: document.location.href,
-		data: { date: date, Uid: uid, ShiftId: shiftId }
-	}).done(function() {
-		
-		var isCheck = button.hasClass("btn-info");
-		if(isCheck){
-			button.removeClass("btn-info");
-			button.addClass("btn-danger");
-			button.html("Bỏ chấm");
-			text.html("đã chấm");
+		data: { 
+			date: date, 
+			Uid: uid, 
+			ShiftId: shiftId, 
+			time_in_hour: time_in_hour,
+			time_in_minute: time_in_minute,
+			time_out_hour: time_out_hour,
+			time_out_minute: time_out_minute,
+			status: status,
+			note: note
 		}
-		else{
-			button.removeClass("btn-danger");
-			button.addClass("btn-info");	
-			button.html("Chấm");
-			text.html("chưa chấm");
+	}).done(function() {
+		if(status !== 'check'){
+			parent.find(".time_in_hour").val("00");
+			parent.find(".time_out_hour").val("00");
+			parent.find(".time_in_minute").val("00");
+			parent.find(".time_out_minute").val("00");
 		}
 	});
 });

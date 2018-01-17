@@ -22,13 +22,11 @@ class SalaryController{
 				$start_time = strtotime($shift->Time_start);
 				$end_time = strtotime($shift->Time_end);
 
-				$totalHour = $end_time - $start_time;
-				$actual_time = strtotime($attendance->Time);
+				$actual_time_in = strtotime($attendance->Time_in);
+        $actual_time_out = strtotime($attendance->Time_out);
 
-				$late_time = $actual_time - $start_time;
-
-				$remained_time = $totalHour - $late_time;
-				$AttendanceHour += round($remained_time / 60 / 60, 1);
+				$remained_time = $actual_time_out - $actual_time_in;
+				$AttendanceHour += round($remained_time / (60 * 60), 1);
 			}
 			
 			// return in hour
@@ -74,7 +72,7 @@ class SalaryController{
 
   public function viewHistory($historyId=null) {
     if($historyId == null ) {
-      $data = salary_history::all();
+      $data = salary_history::orderBy('id', 'DESC')->get();
       return View('SalaryHistoryList', ["isAdmin" => true, "data" => $data]);
     }
     else {

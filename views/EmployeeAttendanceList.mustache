@@ -13,18 +13,22 @@
             <thead>
                 <tr>
                     <th class="text-center">Ngày</th>
-                    <th class="text-center">Giờ</th>
+                    <th class="text-center">Giờ vào</th>
+                    <th class="text-center">Giờ ra</th>
                     <th class="text-center">Tên Ca</th>
                     <th class="text-center">Thời gian ca</th>
+                    <th class="text-center">Ghi chú</th>
                 </tr>
             </thead>
             <tbody>
             	{{#attendances}}
             		<tr>
             			<td class="text-center">{{Date}}</td>
-            			<td class="text-center">{{Time}}</td>
+            			<td class="text-center">{{Time_in}}</td>
+                        <td class="text-center">{{Time_out}}</td>
             			<td class="text-center">{{ShiftName}}</td>
             			<td class="text-center">{{ShiftTime}}</td>
+                        <td class="text-center">{{Note}}</td>
             		</tr>
             	{{/attendances}}
             </tbody>

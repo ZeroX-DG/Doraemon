@@ -98,9 +98,11 @@ class AttendanceController{
 			$shiftInfo = Shifts::find($attendance->ShiftId);
 			$info = [
 				"Date" => $attendance->Date,
-				"Time" => $attendance->Time,
+				"Time_in" => $attendance->Time_in,
+				"Time_out" => $attendance->Time_out,
 				"ShiftName" => $shiftInfo->Name,
-				"ShiftTime" => $shiftInfo->Time_start . " - " . $shiftInfo->Time_end
+				"ShiftTime" => $shiftInfo->Time_start . " - " . $shiftInfo->Time_end,
+				"Note" => $attendance->Note
 			];
 			array_push($data, $info);
 		}
@@ -112,7 +114,7 @@ class AttendanceController{
 
 	public function listAll(){
 		if($_SESSION['Role'] == ADMIN_ROLE){
-			$attendances = Employee_Attendance::all();
+			$attendances = Employee_Attendance::orderBy('Date', 'DESC')->get();
 			$data = [];
 			foreach($attendances as $attendance){
 				$shiftInfo = Shifts::find($attendance->ShiftId);
@@ -120,7 +122,8 @@ class AttendanceController{
 				$info = [
 					"DisplayName" => $userInfo->DisplayName,
 					"Date" => $attendance->Date,
-					"Time" => $attendance->Time,
+					"Time_in" => $attendance->Time_in,
+					"Time_out" => $attendance->Time_out,
 					"ShiftName" => $shiftInfo->Name,
 					"ShiftTime" => $shiftInfo->Time_start . " - " . $shiftInfo->Time_end
 				];
@@ -175,23 +178,40 @@ class AttendanceController{
 				$user = Users::find($detail->UserId);
 				$shift = Shifts::find($detail->ShiftId);
 				$condition = "chưa chấm";
+				$time_in_hour = "00";
+				$time_in_minute = "00";
+				$time_out_hour = "00";
+				$time_out_minute = "00";
 				date_default_timezone_set("Asia/Ho_Chi_Minh");
 				$attendances = Employee_Attendance::where("UserId", "=", $detail->UserId)
 									->where("Date", "=", date("Y-m-d", strtotime($currentDate)))
 									->where("ShiftId", "=", $detail->ShiftId)
-									->get();
+									->first();
+				
 				if(count($attendances) != 0){
 					$condition = "đã chấm";
+					$time_in_hour = date("H", strtotime($attendances->Time_in));
+					$time_in_minute = date("i", strtotime($attendances->Time_in));
+					$time_out_hour = date("H", strtotime($attendances->Time_out));
+					$time_out_minute = date("i", strtotime($attendances->Time_out));
 				}
+				$note = '';
+				if (isset($attendances->Note))
+					$note = $attendances->Note;
 				$arr = [
 					"user" => $user,
 					"shift" => $shift,
 					"condition"=> $condition,
-					"checked" => $condition == "đã chấm"
+					"time_in_hour" => $time_in_hour, 
+					"time_in_minute" => $time_in_minute,
+					"time_out_hour" => $time_out_hour, 
+					"time_out_minute" => $time_out_minute,
+					"checked" => $condition == "đã chấm",
+					"note" => $note
 				];
 				array_push($employees, $arr);
 			}
-			
+			//print_r($note);
 			$dayOfWeek = [];
 			$strDayOfWeek = null;
 			if($date == 8){
@@ -219,7 +239,8 @@ class AttendanceController{
 				"scheduleInfo" => $schedule,
 				"dayOfWeek" => $dayOfWeek,
 				"strDayOfWeek" => $strDayOfWeek,
-				"currentDate" => $currentDate
+				"currentDate" => $currentDate,
+				"currentDateVN" => date("d/m/Y", strtotime($currentDate))
 			]);
 		}
 	}
@@ -227,29 +248,39 @@ class AttendanceController{
 	public function adminTakeAttendance(){
 		if($_SESSION['Role'] == ADMIN_ROLE){
 			$userId = $_POST['Uid'];
-			$shiftId = $_POST['ShiftId'];		
+			$shiftId = $_POST['ShiftId'];
+			$time_in_hour = $_POST['time_in_hour'];
+			$time_in_minute = $_POST['time_in_minute'];
+			$time_out_hour = $_POST['time_out_hour'];
+			$time_out_minute = $_POST['time_out_minute'];
+			$status = $_POST['status'];
+			$note = $_POST['note'];
 			$date = date('Y-m-d', strtotime($_POST['date']));
-			$attendance = Employee_Attendance::where("UserId", "=", $userId)
-											->where("ShiftId", "=", $shiftId)
-											->where("Date", "=", $date)
-											->get();
-			if(count($attendance) != 0){
+			if ($status != 'check') {
 				Employee_Attendance::where("UserId", "=", $userId)
-											->where("ShiftId", "=", $shiftId)
-											->where("Date", "=", $date)
-											->delete();
+								->where("ShiftId", "=", $shiftId)
+								->where("Date", "=", $date)
+								->delete();
 				echo "done";
 				return;
-				
 			}
 
-			$time = date('H:i:s', strtotime(Shifts::find($shiftId)->Time_start));
-			$attendance = new Employee_Attendance;
+			$attendance = Employee_Attendance::where("UserId", "=", $userId)
+																				->where("ShiftId", "=", $shiftId)
+																				->where("Date", "=", $date)
+																				->first();
+			if (count($attendance) == 0) {
+				$attendance = new Employee_Attendance;
+			}
+			$time_in = date('H:i:s', strtotime($time_in_hour . ":" .$time_in_minute . ":" . "00"));
+			$time_out = date('H:i:s', strtotime($time_out_hour . ":" .$time_out_minute . ":" . "00"));
 			$attendance->UserId = $userId;
 			$attendance->Date = $date;
-			$attendance->Time = $time;
+			$attendance->Time_in = $time_in;
+			$attendance->Time_out = $time_out;
 			$attendance->ShiftId = $shiftId;
 			$attendance->IP = "0.0.0.0";
+			$attendance->Note = $note;
 			$attendance->save();
 			echo "done";
 		}

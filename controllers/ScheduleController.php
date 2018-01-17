@@ -212,7 +212,8 @@ class ScheduleController{
     $data = [];
     foreach($shifts as $shift) {
       $shiftData = [];
-      $shiftData["name"] = $shift->Name;
+			$shiftData["name"] = $shift->Name;
+			$shiftData["time"] = $shift->Time_start . " -> " . $shift->Time_end;
       $shiftData["content"] = [];
       for($day = 2; $day < 9; $day++) {
         $shiftInDay = Schedule_details::where('Schedule_id', '=', $schedule_id)

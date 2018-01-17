@@ -10,9 +10,9 @@
         <div class="col-md-12">
             <h1 class="text-center">Chấm công nhân viên</h1>
             <h1 class="text-center">Lịch: {{scheduleInfo.Name}}</h1>
-            <h1 class="text-center">Ngày: {{strDayOfWeek}}</h1>
+            <h1 class="text-center">Ngày: {{strDayOfWeek}} ({{currentDateVN}})</h1>
         </div>
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-12">
             <div class="dropdown">
                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                 Các ngày&nbsp;
@@ -32,6 +32,9 @@
                             <th>Tên nhân viên</th>
                             <th>Tên ca</th>
                             <th>Tình trạng</th>
+                            <th>Giờ vào</th>
+                            <th>Giờ ra</th>
+                            <th>Ghi chú</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>
@@ -39,15 +42,35 @@
                         {{#employees}}
                         <tr>
                             <td>{{user.DisplayName}}</td>
-                            <td>{{shift.Name}}</td>
-                            <td><span id="status">{{condition}}</span></td>
+                            <td>{{shift.Name}}<br>{{shift.Time_start}} - {{shift.Time_end}}</td>
                             <td>
-                                {{#checked}}
-                                <button class="btn btn-danger checkBtn" id="uncheckAttendance" data-date="{{currentDate}}" data-uid="{{user.Id}}" data-shiftid="{{shift.Id}}">Bỏ chấm</button>
-                                {{/checked}}
-                                {{^checked}}
-                                <button class="btn btn-info checkBtn" id="checkAttendance" data-date="{{currentDate}}" data-uid="{{user.Id}}" data-shiftid="{{shift.Id}}">Chấm</button>
-                                {{/checked}}
+                                <form>
+                                <radiogroup>
+                                    {{#checked}}
+                                    <input type="radio" name="status" value="check" class="status" checked /> Có đi làm <br>
+                                    <input type="radio" name="status" value="nocheck" class="status"/> Không đi làm
+                                    {{/checked}}
+                                    {{^checked}}
+                                    <input type="radio" name="status" value="check" class="status"  /> Có đi làm <br>
+                                    <input type="radio" name="status" value="nocheck" class="status" checked/> Không đi làm
+                                    {{/checked}}
+
+                                </radiogroup>
+                                </form>
+                            </td>
+                            <td>
+                                <input type="number" class="time_in_hour form-control" value="{{time_in_hour}}" style="width: 100px; display: inline"/> : 
+                                <input type="number" class="time_in_minute form-control" value="{{time_in_minute}}" style="width: 100px; display: inline" />
+                            </td>
+                            <td>
+                                <input type="number" class="time_out_hour form-control" value="{{time_out_hour}}" style="width: 100px; display: inline" /> : 
+                                <input type="number" class="time_out_minute form-control" value="{{time_out_minute}}" style="width: 100px; display: inline" />
+                            </td>
+                            <td>
+                                <textarea class="form-control note">{{note}}</textarea>
+                            </td>
+                            <td>
+                                <button class="checkBtn btn btn-primary" data-date="{{currentDate}}" data-uid="{{user.Id}}" data-shiftid="{{shift.Id}}" id="update">Cập nhật</button>
                             </td>
                         </tr>
                         {{/employees}}
