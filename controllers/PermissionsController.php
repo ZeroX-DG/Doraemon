@@ -22,7 +22,7 @@ class PermissionsController{
       return View("PermissionManagement", [
         "users" => $users,
         "permissionsList" => $permissions,
-        "isAdmin" => true
+        "isAdmin" => $_SESSION['Role'] == ADMIN_ROLE
       ]);
     }
     else{

@@ -142,9 +142,10 @@ function oneDot(input) {
 $(".salaryByHour input").keyup(function(){
 	let bonusSalary = parseFloat($(this).parent().siblings(".bonusSalary").find("input").val().replace(".", "")) || 0;
   let salaryByHour = parseFloat($(this).val().replace(".", "")) || 0;
-  let attendanceHours = $(this).parent().siblings(".AttendanceHour").html();
+	let attendanceHours = $(this).parent().siblings(".AttendanceHour").html();
+	let shipSalary = parseInt($(this).parent().siblings(".shipSalary").html().replace(",", "").replace(" vnđ", ""));
   let cashAdvance = parseFloat($(this).parent().siblings(".cashAdvance").find("input").val().replace(".", "")) || 0;
-  let total = numberWithCommas((salaryByHour * attendanceHours) + bonusSalary - cashAdvance);
+  let total = numberWithCommas((salaryByHour * attendanceHours) + shipSalary + bonusSalary - cashAdvance);
   $(this).parent().siblings(".totalSalary").html(total + " vnđ");
 });
 
@@ -152,17 +153,19 @@ $(".bonusSalary input").keyup(function(){
   let bonusSalary = parseFloat($(this).val().replace(".", "")) || 0;
   let salaryByHour = parseFloat($(this).parent().siblings(".salaryByHour").find("input").val().replace(".", "")) || 0;
   let attendanceHours = $(this).parent().siblings(".AttendanceHour").html();
-  let cashAdvance = parseFloat($(this).parent().siblings(".cashAdvance").find("input").val().replace(".", "")) || 0;
-  let total = numberWithCommas((salaryByHour * attendanceHours) + bonusSalary - cashAdvance);
+	let shipSalary = parseInt($(this).parent().siblings(".shipSalary").html().replace(",", "").replace(" vnđ", ""));
+	let cashAdvance = parseFloat($(this).parent().siblings(".cashAdvance").find("input").val().replace(".", "")) || 0;
+  let total = numberWithCommas((salaryByHour * attendanceHours) + shipSalary + bonusSalary - cashAdvance);
   $(this).parent().siblings(".totalSalary").html(total + " vnđ");
 });
 
 $(".cashAdvance input").keyup(function(){
 	let bonusSalary = parseFloat($(this).parent().siblings(".bonusSalary").find("input").val().replace(".", "")) || 0;
   let salaryByHour = parseFloat($(this).parent().siblings(".salaryByHour").find("input").val().replace(".", "")) || 0;
-  let attendanceHours = $(this).parent().siblings(".AttendanceHour").html();
+	let attendanceHours = $(this).parent().siblings(".AttendanceHour").html();
+	let shipSalary = parseInt($(this).parent().siblings(".shipSalary").html().replace(",", "").replace(" vnđ", ""));
   let cashAdvance = parseFloat($(this).val().replace(".", "")) || 0;
-  let total = numberWithCommas((salaryByHour * attendanceHours) + bonusSalary - cashAdvance);
+  let total = numberWithCommas((salaryByHour * attendanceHours) + shipSalary + bonusSalary - cashAdvance);
   $(this).parent().siblings(".totalSalary").html(total + " vnđ");
 });
 
@@ -267,6 +270,9 @@ $(".cancelShip").click(function(e){
 			if(mes.indexOf("done") != -1){
 				el4.parent().parent().remove();
 			}
+			else {
+				$("#canCancelShip").modal();
+			}
 		}
 	});
 });
@@ -286,6 +292,9 @@ $(".acceptShip").click(function(e){
 		success: function(mes) {
 			if(mes.indexOf("done") != -1){
 				el4.parent().parent().remove();
+			}
+			else {
+				$("#canAcceptShip").modal();
 			}
 		}
 	});
@@ -376,7 +385,7 @@ navigator.geolocation.getCurrentPosition((pos)=>{
   //10.9286513,106.6880603
   //10.786813, 106.666491
   let p1 = {lng: c_lng, lat: c_lat};
-  let p2 = {lng: 10.786813, lat: 106.666491};
+  let p2 = {lng: 10.7049882, lat: 106.7365014};
   let dist = getDistance(p1, p2);
   if(dist > 200) {
     $(".distance").html("bạn đang ở quá xa");
@@ -385,7 +394,8 @@ navigator.geolocation.getCurrentPosition((pos)=>{
   }
   else{
     $(".distance").css("display", "none");
-  }
+	}
+	console.log("Khoảng cách: " + dist);
 });
 //------------------------
 // Salary History

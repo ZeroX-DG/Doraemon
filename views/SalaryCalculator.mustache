@@ -15,6 +15,7 @@
           <th>Nhân viên</th>
           <th>lương </th>
           <th>Số giờ công</th>
+          <th>Tiền ship</th>
           <th>Thưởng</th>
           <th>Tạm ứng</th>
           <th>Tổng</th>
@@ -28,6 +29,7 @@
             <input type="number" onkeyup="oneDot(this)">
           </td>
           <td class="AttendanceHour">{{AttendanceHour}}</td>
+          <td class="shipSalary">{{ShipSalary}}</td>
           <td class="bonusSalary">
             <input type="number" onkeyup="oneDot(this)">
           </td>
@@ -41,7 +43,9 @@
         {{/employees}}
       </tbody>
     </table>
+    {{#isAdmin}}
     <button class="btn btn-success" data-toggle="modal" data-target="#SaveSalaryModal" style="float: right; margin-right: 20px">Lưu</button>
+    {{/isAdmin}}
     <div class="modal fade" id="SaveSalaryModal" role="dialog">
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -66,7 +70,9 @@
             </select>
           </div>
           <div class="modal-footer">
+            {{#isAdmin}}
             <button class="btn btn-info" onclick="sendSalaryHistory()">Lưu</button>
+            {{/isAdmin}}
           </div>
         </div>
       </div>

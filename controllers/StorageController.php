@@ -48,54 +48,79 @@ class StorageController{
 	}
 
 	public function deleteProduct(){
-		$id = $_POST['Id'];
-		Products::where('Id', '=', $id)->delete();
-		echo "done";
+		if (havePermission(10)) {
+			$id = $_POST['Id'];
+			Products::where('Id', '=', $id)->delete();
+			echo "done";
+		}
+		else {
+			echo "Bạn không có quyền vào trang này";
+		}
 	}
 
 	public function viewAddProduct(){
-		return View("AddProductToStorange",[
-      "isAdmin" => $_SESSION['Role'] == ADMIN_ROLE
-    ]);
+		if (havePermission(8)) {
+			return View("AddProductToStorange",[
+				"isAdmin" => $_SESSION['Role'] == ADMIN_ROLE
+			]);
+		}
+		else {
+			echo "Bạn không có quyền vào trang này";
+		}
 	}
 
 	public function addProduct(){
-		$productName = $_POST['name'];
-    $productPrice = $_POST['price'];
-		$product = Products::where('Name', '=', $productName)->first();
+		if (havePermission(8)) {
+			$productName = $_POST['name'];
+			$productPrice = $_POST['price'];
+			$product = Products::where('Name', '=', $productName)->first();
 
-		if($product == null){
-			$newProduct = new Products;
-			$newProduct->Name = $productName;
-      $newProduct->Price = $productPrice;
-			$newProduct->save();
+			if($product == null){
+				$newProduct = new Products;
+				$newProduct->Name = $productName;
+				$newProduct->Price = $productPrice;
+				$newProduct->save();
+			}
+			else{
+				return View("AddProductToStorange",[
+					"isAdmin" => $_SESSION['Role'] == ADMIN_ROLE,
+					"message" => "sản phẩm đã tồn tại !"
+				]);
+			}
+			redirect('/storage');
 		}
-		else{
-			return View("AddProductToStorange",[
-        "isAdmin" => $_SESSION['Role'] == ADMIN_ROLE,
-        "message" => "sản phẩm đã tồn tại !"
-      ]);
+		else {
+			echo "Bạn không có quyền vào trang này";
 		}
-		redirect('/storage');
 	}
 
 	public function viewEditProduct($productId){
-		$product = Products::find($productId);
-		return View('editProductInStorange', [
-			"price" => $product->Price,
-			"name" => $product->Name,
-			"isAdmin" => $_SESSION['Role'] == ADMIN_ROLE
-		]);
+		if (havePermission(11)) {
+			$product = Products::find($productId);
+			return View('editProductInStorange', [
+				"price" => $product->Price,
+				"name" => $product->Name,
+				"isAdmin" => $_SESSION['Role'] == ADMIN_ROLE
+			]);
+		}
+		else {
+			echo "Bạn không có quyền vào trang này";
+		}
 	}
 
 	public function EditProduct($productId){
-		$productName = $_POST['name'];
-    $productPrice = str_replace(".", "", $_POST['price']);
-		$product = Products::find($productId);
-		$product->Name = $productName;
-    $product->Price = $productPrice;
-		$product->save();
-    redirect('/storage');
+		if (havePermission(11)) {
+			$productName = $_POST['name'];
+			$productPrice = str_replace(".", "", $_POST['price']);
+			$product = Products::find($productId);
+			$product->Name = $productName;
+			$product->Price = $productPrice;
+			$product->save();
+			redirect('/storage');
+		}
+		else {
+			echo "Bạn không có quyền vào trang này";
+		}
 	}
 
 	public function viewAddStorage(){
@@ -145,46 +170,7 @@ class StorageController{
         );
       }
     }
-    $columnHeader = '';
-    $columnHeader = '"tên hàng"' . "\t" . '"đơn giá"' . "\t" . '"nhập vào"' . "\t" . '"số lượng nhập"' . "\t" . '"tổng tiền"' . "\n";
-    $setData = '';
-    //$setData .= $columnHeader;
-    foreach($data as $record) {
-      $storages = '';
-      $record = (array)$record;
-      if ($record['isWorkStorage']) {
-        $storages .= 'kho quán';
-      }
-      if ($record['isWorkStorage'] && $record['isHomeStorage']) {
-        $storages .= ',';
-      }
-      if ($record['isHomeStorage']) {
-        $storages .= 'kho nhà';
-      }
-      $rowData = 
-        '"' . 
-        $record['productName'] . 
-        '"' . "\t" .
-        '"' .
-        $record['price'] .
-        '"' . "\t" .
-        '"' .
-        $storages .
-        '"' . "\t" .
-        '"' .
-        $record['amount'] .
-        '"' . "\t" .
-        '"' .
-        $record['total'] .
-        '"' . "\n";
-      $setData .= $rowData;
-    }
-    header("Content-type: application/octet-stream");  
-    header("Content-Disposition: attachment; filename=result.xls");  
-    header("Pragma: no-cache");  
-    header("Expires: 0");
-    echo "\n" . $columnHeader  . "\n" . $setData . "\n";
-    //redirect("/storage");
+    redirect("/storage");
   }
 
 	public function importProduct($storageId, $productId, $date, $amount){
@@ -221,6 +207,11 @@ class StorageController{
 		$export->Amount = $amount;
 		$export->save();
 
+    $storageName = Storages::where('Id', '=', $storageId)->first()->Name;
+    if ($storageName == 'Kho nhà') {
+      $workStorageId = Storages::where('Name', '=', 'Kho quán')->first()->Id;
+      $this->importProduct($workStorageId, $productId, $date, $amount);
+    }
 		$content = StorageContent::where('StorageId', '=', $storageId)
 									->where('ProductId', '=', $productId)
 									->first();
@@ -254,28 +245,42 @@ class StorageController{
 
 	public function history(){
 		$imports = StorageImport::all()->toArray();
-		$r_imports = [];
+		$home_imports = [];
+    $work_imports = [];
 		$exports = StorageExport::all()->toArray();
-		$r_exports = [];
+		$home_exports = [];
+    $work_exports = [];
 		foreach ($imports as $import){
 			$productName = Products::find($import["ProductId"])->Name;
 			$storageName = Storages::find($import["StorageId"])->Name;
 			$import["storageName"] = $storageName;
 			$import["Name"] = $productName;
-			array_push($r_imports, $import);
+      if ($storageName == 'Kho nhà') {
+        array_push($home_imports, $import);
+      }
+			else {
+        array_push($work_imports, $import);
+      }
 		}
 		foreach ($exports as $export){
 			$productName = Products::find($export["ProductId"])->Name;
 			$storageName = Storages::find($export["StorageId"])->Name;
 			$export["storageName"] = $storageName;
 			$export["Name"] = $productName;
-			array_push($r_exports, $export);
+			if ($storageName == 'Kho nhà') {
+        array_push($home_exports, $export);
+      }
+      else {
+        array_push($work_exports, $export);
+      }
 		}
 
 		return View("storageHistory", [
 			"isAdmin" => $_SESSION['Role'] == ADMIN_ROLE,
-			"imports" => $r_imports, 
-			"exports" => $r_exports
+      "home_imports" => $home_imports, 
+      "work_imports" => $work_imports,
+			"home_exports" => $home_exports, 
+			"work_exports" => $work_exports
 		]);
 	}
 }

@@ -4,12 +4,12 @@ use Model\user_permissions;
 class AccountController{
 	public function Index(){
 		$employees = Users::where("Role", "=", EMPLOYEE_ROLE)->get();
-		return View("AccountManagement", ["isAdmin" => true, "employee" => $employees]);
+		return View("AccountManagement", ["isAdmin" => $_SESSION['Role'] == ADMIN_ROLE, "employee" => $employees]);
 	}
 
 	public function Add(){
     if(havePermission(1)){
-      return View("AddNewAccount", ["isAdmin" => true]);
+      return View("AddNewAccount", ["isAdmin" => $_SESSION['Role'] == ADMIN_ROLE]);
     }
     else{
       echo "bạn không có quyền vào trang này";
@@ -19,7 +19,7 @@ class AccountController{
 	public function Edit($id){
     if(havePermission(2)){
   		$employee = Users::find($id);
-  		return View("EditAccount", ["isAdmin" => true, "employee" => $employee]);
+  		return View("EditAccount", ["isAdmin" => $_SESSION['Role'] == ADMIN_ROLE, "employee" => $employee]);
     }
     else{
       echo "bạn không có quyền vào trang này";
@@ -34,23 +34,23 @@ class AccountController{
   		$repass= ($_POST['repass']);
 
   		if(empty($name)){
-  			return View("AddNewAccount",  ["error" => "Tên không được để trống", "hasError" => true, "isAdmin" => true]);
+  			return View("AddNewAccount",  ["error" => "Tên không được để trống", "hasError" => true, "isAdmin" => $_SESSION['Role'] == ADMIN_ROLE]);
   		}
   		if(empty($username)){
-  			return View("AddNewAccount",  ["error" => "Tên hiển thị không được để trống ", "hasError" => true, "isAdmin" => true]);
+  			return View("AddNewAccount",  ["error" => "Tên hiển thị không được để trống ", "hasError" => true, "isAdmin" => $_SESSION['Role'] == ADMIN_ROLE]);
   		}
   		if(empty($pass)){
-  			return View("AddNewAccount",  ["error" => "Mật khẩu không được để trống", "hasError" => true, "isAdmin" => true]);
+  			return View("AddNewAccount",  ["error" => "Mật khẩu không được để trống", "hasError" => true, "isAdmin" => $_SESSION['Role'] == ADMIN_ROLE]);
   		}
   		if(empty($repass)){
-  			return View("AddNewAccount",  ["error" => "Mật khẩu không được để trống", "hasError" => true, "isAdmin" => true]);
+  			return View("AddNewAccount",  ["error" => "Mật khẩu không được để trống", "hasError" => true, "isAdmin" => $_SESSION['Role'] == ADMIN_ROLE]);
   		}
   		if($repass != $pass ){
-  			return View("AddNewAccount",  ["error" => "Mật khẩu nhập lại không đúng", "hasError" => true, "isAdmin" => true]);
+  			return View("AddNewAccount",  ["error" => "Mật khẩu nhập lại không đúng", "hasError" => true, "isAdmin" => $_SESSION['Role'] == ADMIN_ROLE]);
   		}
   		$foundUser = Users::where("UserName", "=", $name)->get();
   		if(count($foundUser) != 0){
-  			return View("AddNewAccount",  ["error" => "Tên đăng nhập đã tồn tại ", "hasError" => true, "isAdmin" => true]);
+  			return View("AddNewAccount",  ["error" => "Tên đăng nhập đã tồn tại ", "hasError" => true, "isAdmin" => $_SESSION['Role'] == ADMIN_ROLE]);
   		}
   		$user = new Users;
   		$user->UserName = $name;

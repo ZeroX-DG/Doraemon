@@ -2,11 +2,11 @@
 <link rel="stylesheet" href="{{view_path}}/assets/css/styles_1.css">
 <body>
   {{#isAdmin}}
-  {{> AdminNav}}
-  {{/isAdmin}}
-  {{^isAdmin}}
-  {{> EmployeeNav}}
-  {{/isAdmin}}
+        {{> AdminNav}}
+    {{/isAdmin}}
+    {{^isAdmin}}
+        {{> EmployeeNav}}
+    {{/isAdmin}}
   <div>
     <div class="col-md-12 text-center">
       <h3>{{ scheduleInfo.Name }}</h3>

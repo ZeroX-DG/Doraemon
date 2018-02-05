@@ -13,33 +13,43 @@ class ShipController{
 			$ship["ShipPrice"] = number_with_comma($ship["ShipPrice"]) . " vnđ";
 			array_push($data, $ship);
 		}
-		return View("Shipmanagement", ["isAdmin" => true, "ships" => $data]);
+		return View("Shipmanagement", ["isAdmin" => $_SESSION['Role'] == ADMIN_ROLE, "ships" => $data]);
 	}
 
 	public function ViewAddShip(){
-		$data = Users::where("Role", "=", EMPLOYEE_ROLE)->get();
-		return View("addShip", ["isAdmin" => true, "employees" => $data]);
+		if (havePermission(12)) {
+			$data = Users::where("Role", "=", EMPLOYEE_ROLE)->get();
+			return View("addShip", ["isAdmin" => $_SESSION['Role'] == ADMIN_ROLE, "employees" => $data]);
+		}
+		else {
+			echo "bạn không có quyền vào trang này";
+		}
 	}
 
 	public function addShip(){
-		$address = $_POST['address'];
-		$phone = $_POST['phone'];
-		$total = str_replace(",", "",$_POST['total']);
-		$shipPrice = $_POST['ShipPrice'];
-		$amount = $_POST['amount'];
-		$distance = $_POST['distance'];
-		$shipper = $_POST['shipper'];
+		if (havePermission(12)) {
+			$address = $_POST['address'];
+			$phone = $_POST['phone'];
+			$total = str_replace(",", "",$_POST['total']);
+			$shipPrice = $_POST['ShipPrice'];
+			$amount = $_POST['amount'];
+			$distance = $_POST['distance'];
+			$shipper = $_POST['shipper'];
 
-		$ship = new Ships;
-		$ship->Address = $address;
-		$ship->Phone = $phone;
-		$ship->Total = $total;
-		$ship->ShipPrice = $shipPrice;
-		$ship->Amount = $amount;
-		$ship->Distance = $distance;
-		$ship->Shipper = $shipper;
-		$ship->save();
-		redirect("/ships");
+			$ship = new Ships;
+			$ship->Address = $address;
+			$ship->Phone = $phone;
+			$ship->Total = $total;
+			$ship->ShipPrice = $shipPrice;
+			$ship->Amount = $amount;
+			$ship->Distance = $distance;
+			$ship->Shipper = $shipper;
+			$ship->save();
+			redirect("/ships");
+		}
+		else {
+			echo "bạn không có quyền vào trang này";
+		}
 	}
 
 	public function History()
@@ -55,81 +65,101 @@ class ShipController{
 			array_push($data, $ship);
 		}
 		return View("Shipmanagement", [
-			"isAdmin" => true, 
+			"isAdmin" => $_SESSION['Role'] == ADMIN_ROLE, 
 			"ships" => $data, 
 			"history" => true
 		]);
 	}
 
 	public function Cancel(){
-		$id = $_POST['Id'];
-		Ships::where("Id", "=", $id)->delete();
-		echo "done";
+		if (havePermission(15)) {
+			$id = $_POST['Id'];
+			Ships::where("Id", "=", $id)->delete();
+			echo "done";
+		}
+		else {
+			echo "bạn không có quyền vào trang này";
+		}
 	}
 
 	public function ViewEdit($id){
-		$emps = Users::where("Role", "=", EMPLOYEE_ROLE)->get();
-		$ship = Ships::where('Id', '=', $id)->first();
-		$shipPrice = [
-			[
-				"price" => "5000",
-				"selected" => $ship->ShipPrice == 5000 ? "selected" : "",
-				"label" => "5,000"
-			],
-			[
-				"price" => "10000",
-				"selected" => $ship->ShipPrice == 10000 ? "selected" : "",
-				"label" => "10,000"
-			],
-			[
-				"price" => "15000",
-				"selected" => $ship->ShipPrice == 15000 ? "selected" : "",
-				"label" => "15,000"
-			]
-		];
-		foreach ($emps as $emp) {
-			if($ship->Shipper == $emp->Id){
-				$emp->selected = "selected";
+		if (havePermission(14)) {
+			$emps = Users::where("Role", "=", EMPLOYEE_ROLE)->get();
+			$ship = Ships::where('Id', '=', $id)->first();
+			$shipPrice = [
+				[
+					"price" => "5000",
+					"selected" => $ship->ShipPrice == 5000 ? "selected" : "",
+					"label" => "5,000"
+				],
+				[
+					"price" => "10000",
+					"selected" => $ship->ShipPrice == 10000 ? "selected" : "",
+					"label" => "10,000"
+				],
+				[
+					"price" => "15000",
+					"selected" => $ship->ShipPrice == 15000 ? "selected" : "",
+					"label" => "15,000"
+				]
+			];
+			foreach ($emps as $emp) {
+				if($ship->Shipper == $emp->Id){
+					$emp->selected = "selected";
+				}
+				else{
+					$emp->selected = "";
+				}
 			}
-			else{
-				$emp->selected = "";
-			}
+			return View("editShip", [
+				"isAdmin" => $_SESSION['Role'] == ADMIN_ROLE, 
+				"employees" => $emps,
+				"ship" => $ship,
+				"shipPrice" => $shipPrice
+			]);
 		}
-		return View("editShip", [
-			"isAdmin" => true, 
-			"employees" => $emps,
-			"ship" => $ship,
-			"shipPrice" => $shipPrice
-		]);
+		else {
+			echo "bạn không có quyền vào trang này";
+		}
 	}
 	public function Edit($id){
-		$ship = Ships::find($id);
+		if (havePermission(14)) {
+			$ship = Ships::find($id);
 
-		$address = $_POST['address'];
-		$phone = $_POST['phone'];
-		$total = str_replace(",", "",$_POST['total']);
-		$shipPrice = $_POST['ShipPrice'];
-		$amount = $_POST['amount'];
-		$distance = $_POST['distance'];
-		$shipper = $_POST['shipper'];
+			$address = $_POST['address'];
+			$phone = $_POST['phone'];
+			$total = str_replace(",", "",$_POST['total']);
+			$shipPrice = $_POST['ShipPrice'];
+			$amount = $_POST['amount'];
+			$distance = $_POST['distance'];
+			$shipper = $_POST['shipper'];
 
-		$ship->Address = $address;
-		$ship->Phone = $phone;
-		$ship->Total = $total;
-		$ship->ShipPrice = $shipPrice;
-		$ship->Amount = $amount;
-		$ship->Distance = $distance;
-		$ship->Shipper = $shipper;
-		$ship->save();
-		redirect("/ships");
+			$ship->Address = $address;
+			$ship->Phone = $phone;
+			$ship->Total = $total;
+			$ship->ShipPrice = $shipPrice;
+			$ship->Amount = $amount;
+			$ship->Distance = $distance;
+			$ship->Shipper = $shipper;
+			$ship->save();
+			redirect("/ships");
+		}
+		else {
+			echo "bạn không có quyền vào trang này";
+		}
 	}
 
 	public function Done(){
-		$id = $_POST['Id'];
-		$ship = Ships::find($id);
-		$ship->Status = 1;
-		$ship->save();
-		echo "done";
+		if (havePermission(13)) {
+			$id = $_POST['Id'];
+			$ship = Ships::find($id);
+			$ship->Status = 1;
+			$ship->save();
+			echo "done";
+		}
+		else {
+			echo "bạn không có quyền vào trang này";
+		}
 	}
 
 	public function ViewSearch(){
@@ -143,10 +173,10 @@ class ShipController{
 			$distance = isset($_GET['distance']) ? $_GET['distance'] : "";
 			$phone = isset($_GET['phone']) ? $_GET['phone'] : "";
 			$result = $this->search($address, $shipper, $distance, $phone);
-			return View("searchShip", ["isAdmin" => true, "ships" => $result]);
+			return View("searchShip", ["isAdmin" => $_SESSION['Role'] == ADMIN_ROLE, "ships" => $result]);
 		}
 		else{
-			return View("searchShip", ["isAdmin" => true]);
+			return View("searchShip", ["isAdmin" => $_SESSION['Role'] == ADMIN_ROLE]);
 		}	
 	}
 
@@ -159,7 +189,12 @@ class ShipController{
 			$result = $result->where("Shipper" , "LIKE", "%".$shipper."%");
 		}
 		else if($shipper != "" && $result == null){
-			$result = Ships::where("Shipper" , "LIKE", "%".$shipper."%");
+			$possible_shipper = Users::where('DisplayName', 'LIKE', "%".$shipper."%")->get();
+			$shippers = [];
+			foreach($possible_shipper as $shipper) {
+				array_push($shippers, $shipper->Id);
+			}
+			$result = Ships::whereIn("Shipper" , $shippers);
 		}
 		if($distance != "" && $result != null){
 			$result = $result->where("Distance" , "=", $distance);

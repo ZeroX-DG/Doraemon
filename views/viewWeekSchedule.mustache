@@ -1,11 +1,11 @@
 {{> head}}
 <body>
-  {{#isAdmin}}
-  {{> AdminNav}}
-  {{/isAdmin}}
-  {{^isAdmin}}
-  {{> EmployeeNav}}
-  {{/isAdmin}}
+    {{#isAdmin}}
+        {{> AdminNav}}
+    {{/isAdmin}}
+    {{^isAdmin}}
+        {{> EmployeeNav}}
+    {{/isAdmin}}
   <h1>Lịch làm việc của tuần </h1>
   <div class="table-responsive">
     <table class="table table-bordered">
@@ -24,14 +24,14 @@
       <tbody>
         {{#data}}
         <tr>
-          <td>{{shift}}</td>
-          {{#users}}
+          <td>{{user}}</td>
+          {{#shifts}}
             <td>
-            {{#usersOfDay}}
-              {{name}}<br>
-            {{/usersOfDay}}
+            {{#shiftOfDay}}
+              {{name}}<br> ({{start}} - {{end}}) <br>
+            {{/shiftOfDay}}
             </td>
-          {{/users}}
+          {{/shifts}}
         </tr>
         {{/data}}
       </tbody>

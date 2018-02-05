@@ -20,93 +20,6 @@ class ScheduleController{
 		return $allSchedule->toArray();
 	}
 
-	// public function details($scheduleId = null){
-	// 	// data to render
-	// 	$data = [];
-	// 	// schedule info
-	// 	$scheduleInfo = null;
-	// 	if($scheduleId == null){
-	// 		// if there's no schedule id 
-	// 		// then get the latest one !
-	// 		$scheduleInfo = Schedules::orderBy('id', 'desc')->first();
-	// 	}
-	// 	else{
-	// 		$scheduleInfo = Schedules::find($scheduleId);
-	// 	}	
-		
-	// 	if($scheduleInfo == null){
-	// 		if($_SESSION['Role'] == ADMIN_ROLE){
-	// 			return View("AddSchedule", ["isAdmin" => true]);
-	// 		}
-	// 	}
-	// 	$scheduleInfo = $scheduleInfo->toArray();
-	// 	// get employee list
-	// 	$employees = Users::where('Role', '>', ADMIN_ROLE)->get();
-	// 	// call getEmployeeSchedule with employee id
-	// 	foreach($employees as $employee){
-	// 		$schedules = $this->getEmployeeSchedule($scheduleInfo["Id"], $employee->Id);
-	// 		// get shift details
-	// 		$shifts_details = []; 
-	// 		for($i = 2; $i < 9; $i++){
-	// 			$shifts_details["t" . $i] = [];
-	// 		}
-	// 		foreach($schedules as $schedule){
-	// 			// key for array
-	// 			$dayOfWeek = "t".$schedule["DayOfWeek"];
-				
-	// 			$shift = Shifts::find($schedule["ShiftId"])->toArray();
-	// 			$timeStartParts = date_parse($shift["Time_start"]);
-	// 			$timeEndParts = date_parse($shift["Time_end"]);
-	// 			$timeAt = "";
-	// 			if($timeStartParts["hour"] < 12){
-	// 				$timeAt = "morning";
-	// 			}
-	// 			else if($timeStartParts["hour"] < 17){
-	// 				$timeAt = "afternoon";
-	// 			}
-	// 			else{
-	// 				$timeAt = "night";
-	// 			}
-	// 			$shift["Time_start"] = $timeStartParts["hour"] . 
-	// 									":" . 
-	// 									$timeStartParts["minute"];
-	// 			$shift["Time_end"] = $timeEndParts["hour"] . 
-	// 									":" . 
-	// 									$timeEndParts["minute"];
-	// 			$shift["timeAt"] = $timeAt;
-	// 			$shift["ShiftId"] = $schedule["ShiftId"];
-	// 			$shift["Date"] = $schedule["Date"];
-	// 			$shift["DayOfWeek"] = $schedule["DayOfWeek"];
-	// 			array_push($shifts_details[$dayOfWeek], $shift);
-	// 			// sort shifts
-	// 			usort($shifts_details[$dayOfWeek], function ( $a, $b ) {
-	// 			    return strtotime($a["Time_start"]) - strtotime($b["Time_start"]);
-	// 			});
-	// 		}
-
-	// 		array_push($data, [
-	// 			"Uid" => $employee->Id,
-	// 			"DisplayName" => $employee->DisplayName, 
-	// 			"Shifts" => $shifts_details,
-	// 			]);
-	// 	}
-	// 	// Other schedule
-	// 	$otherSchedule = Schedules::all()->toArray();
-	// 	// is admin
-	// 	$isAdmin = $_SESSION["Role"] == ADMIN_ROLE;
-	// 	// all shift
-	// 	$allShifts = Shifts::all();
-	// 	// render
-	// 	View("ScheduleDetails", [
-	// 		"schedules" => $data, 
-	// 		"scheduleInfo" => $scheduleInfo,
-	// 		"otherSchedule" => $otherSchedule,
-	// 		"isAdmin" => $isAdmin,
-	// 		"employees" => $employees,
-	// 		"allShifts" => $allShifts,
-	// 	]);
-	// }
-
 	public function addSchedule()
 	{
     if(havePermission(4)){
@@ -162,7 +75,7 @@ class ScheduleController{
 	
 		if(count($schedules) == 0){
 			if($_SESSION['Role'] == ADMIN_ROLE){
-				return View("AddSchedule", ["isAdmin" => true]);
+				return View("AddSchedule", ["isAdmin" => $_SESSION['Role'] == ADMIN_ROLE]);
 			}
 		}
 		if($scheduleId == null){
@@ -189,7 +102,7 @@ class ScheduleController{
 			array_push($data, ["Id" => $i]);
 		}
 		return View("ScheduleDetails", [
-			"isAdmin" => true,
+			"isAdmin" => $_SESSION['Role'] == ADMIN_ROLE,
 			"scheduleInfo" => $scheduleInfo,
 			"otherSchedule" => $schedules,
 			"data" => $data
@@ -208,28 +121,30 @@ class ScheduleController{
       ]
     ]
     */
-    $shifts = Shifts::all();
+    $employees = Users::all();
     $data = [];
-    foreach($shifts as $shift) {
+    foreach($employees as $employee) {
       $shiftData = [];
-			$shiftData["name"] = $shift->Name;
-			$shiftData["time"] = $shift->Time_start . " -> " . $shift->Time_end;
+			$shiftData["name"] = $employee->DisplayName;
       $shiftData["content"] = [];
       for($day = 2; $day < 9; $day++) {
         $shiftInDay = Schedule_details::where('Schedule_id', '=', $schedule_id)
                                       ->where('DayOfWeek', '=', $day)
-                                      ->where('ShiftId', '=', $shift->Id)
+                                      ->where('UserId', '=', $employee->Id)
                                       ->get();
-        $employees = [];
+        $shifts = [];
         foreach($shiftInDay as $item) {
-          $employee = Users::where('Id', '=', $item->UserId)->first();
-          array_push($employees, $employee->DisplayName);
+          $shift = Shifts::where('Id', '=', $item->ShiftId)->first();
+          array_push($shifts, $shift->Name . '<br>' . $shift->Time_start . '->' . $shift->Time_end);
         }
-        $shiftData["content"]["t" . $day] = implode("<br><br>" ,$employees);
+        $shiftData["content"]["t" . $day] = implode("<br><br>" ,$shifts);
       }
       array_push($data, $shiftData);
     }
-    return View("WeekSchedule", ["isAdmin" => true, "data" => $data]);
+    return View("WeekSchedule", [
+      "isAdmin" => $_SESSION['Role'] == ADMIN_ROLE, 
+      "data" => $data
+    ]);
   }
 
 	public function detailOfDate($scheduleId, $date) {
@@ -267,13 +182,11 @@ class ScheduleController{
         $start_time = strtotime($shift->Time_start);
         $end_time = strtotime($shift->Time_end);
 
-        $totalHour = $end_time - $start_time;
-        $actual_time = strtotime($attendance->Time);
+        $actual_time_in = strtotime($attendance->Time_in);
+        $actual_time_out = strtotime($attendance->Time_out);
 
-        $late_time = $actual_time - $start_time;
-
-        $remained_time = $totalHour - $late_time;
-        $AttendanceHour += round($remained_time / 60 / 60, 1);
+        $remained_time = $actual_time_out - $actual_time_in;
+        $AttendanceHour += round($remained_time / (60 * 60), 1);
       }
       // return in hour
 			if(count($raw) > 0){
@@ -317,41 +230,5 @@ class ScheduleController{
 			'scheduleId' => $scheduleId
 		]);
 	}
-
-  public function showEmployeeSchedule($scheduleId = null) {
-    /*
-    response data
-    [
-      [Shift, [mon=>[], tue=>[], wen=>[]]]
-    ]
-    */
-    // first get all the shifts
-    // loop through them
-    // find list of date from mon -> sun of that shift
-    // push to array
-    // return it
-    if($scheduleId == null) {
-      $scheduleId = Schedules::all()->last()->Id;
-    }
-    $data = [];
-    $shifts = Shifts::all();
-    foreach($shifts as $shift) {
-      $userList = [];
-      $schedule_details = Schedule_details::where('Schedule_id', $scheduleId)
-                                          ->where('ShiftId', $shift->Id)
-                                          ->orderBy('DayOfWeek')
-                                          ->get();
-      $userOfDay = [];
-      foreach($schedule_details as $detail) { 
-        $user = Users::where('Id', '=', $detail->UserId)->first();
-        array_push($userOfDay, ["name" => $user->DisplayName]);      
-      }
-      array_push($userList, [
-       "usersOfDay" => $userOfDay
-      ]);
-      array_push($data, ["shift" => $shift->Name, "users" => $userList]);
-    }
-    return View("viewWeekSchedule", ["isAdmin" => false, "data" => $data]);
-  }
 }
 ?>

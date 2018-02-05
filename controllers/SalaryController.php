@@ -4,6 +4,7 @@ use Model\Employee_Attendance;
 use Model\Shifts;
 use Model\salary_history;
 use Model\salary_history_details;
+use Model\Ships;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 class SalaryController{
@@ -27,13 +28,21 @@ class SalaryController{
 
 				$remained_time = $actual_time_out - $actual_time_in;
 				$AttendanceHour += round($remained_time / (60 * 60), 1);
-			}
-			
+      }
+      
+      // get user ship salary
+      $ships = Ships::where('Shipper', '=', $employee["Id"])->get();
+      $shipSalary = 0;
+      foreach ($ships as $ship) {
+        $shipSalary += $ship->ShipPrice;
+      }
+      // return employee ship salary
+      $employee["ShipSalary"] = number_format($shipSalary) . ' vnđ';
 			// return in hour
 			$employee["AttendanceHour"] = $AttendanceHour;
 			array_push($data, $employee);
 		}
-		return View("SalaryCalculator", ["isAdmin" => true, "employees" => $data]);
+		return View("SalaryCalculator", ["isAdmin" => $_SESSION['Role'] == ADMIN_ROLE, "employees" => $data]);
 	}
   public function saveToHistory(){
     $data = $_POST['data'];
@@ -73,7 +82,7 @@ class SalaryController{
   public function viewHistory($historyId=null) {
     if($historyId == null ) {
       $data = salary_history::orderBy('id', 'DESC')->get();
-      return View('SalaryHistoryList', ["isAdmin" => true, "data" => $data]);
+      return View('SalaryHistoryList', ["isAdmin" => $_SESSION['Role'] == ADMIN_ROLE, "data" => $data]);
     }
     else {
       $raw = salary_history_details::where('historyId', '=', $historyId)
@@ -90,7 +99,7 @@ class SalaryController{
         array_push($data, $record);
       }
 
-      return View("SalaryHistory", ["isAdmin" => true, "data" => $data]);
+      return View("SalaryHistory", ["isAdmin" => $_SESSION['Role'] == ADMIN_ROLE, "data" => $data]);
     }
   }
 }

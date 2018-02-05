@@ -9,53 +9,111 @@
     <h1 class="text-center">Lịch sử xuất nhập hàng</h1>
     <div class="row">
         <div class="col-md-6">
-            <h1 class="text-center">Nhập hàng</h1>
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Tên kho</th>
-                            <th>Tên hàng</th>
-                            <th>Số lượng</th>
-                            <th>Ngày nhập</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#imports}}
-                        <tr>
-                            <td>{{storageName}}</td>
-                            <td>{{Name}}</td>
-                            <td>{{Amount}}</td>
-                            <td>{{Import_date}}</td>
-                        </tr>
-                        {{/imports}}
-                    </tbody>
-                </table>
+            <div class="row">
+              <div class="col-md-6">
+                <h1 class="text-center">Nhập hàng kho nhà</h1>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Tên kho</th>
+                                <th>Tên hàng</th>
+                                <th>Số lượng</th>
+                                <th>Ngày nhập</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#home_imports}}
+                            <tr>
+                                <td>{{storageName}}</td>
+                                <td>{{Name}}</td>
+                                <td>{{Amount}}</td>
+                                <td>{{Import_date}}</td>
+                            </tr>
+                            {{/home_imports}}
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <h1 class="text-center">Nhập hàng kho quán</h1>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Tên kho</th>
+                                <th>Tên hàng</th>
+                                <th>Số lượng</th>
+                                <th>Ngày nhập</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#work_imports}}
+                            <tr>
+                                <td>{{storageName}}</td>
+                                <td>{{Name}}</td>
+                                <td>{{Amount}}</td>
+                                <td>{{Import_date}}</td>
+                            </tr>
+                            {{/work_imports}}
+                        </tbody>
+                    </table>
+                </div>
+              </div>
             </div>
         </div>
         <div class="col-md-6">
-            <h1 class="text-center">Xuất hàng</h1>
-            <div class="table-responsive">
-                <table class="table table-bordered" >
-                    <thead>
-                        <tr>
-                            <th>Tên kho</th>
-                            <th>Tên hàng</th>
-                            <th>Số lượng</th>
-                            <th>Ngày xuất</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#exports}}
-                        <tr>
-                            <td>{{storageName}}</td>
-                            <td>{{Name}}</td>
-                            <td>{{Amount}}</td>
-                            <td>{{Export_date}}</td>
-                        </tr>
-                        {{/exports}}
-                    </tbody>
-                </table>
+            <div class="row">
+              <div class="col-md-6">
+                <h1 class="text-center">Xuất hàng kho nhà</h1>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Tên kho</th>
+                                <th>Tên hàng</th>
+                                <th>Số lượng</th>
+                                <th>Ngày xuất</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#home_exports}}
+                            <tr>
+                                <td>{{storageName}}</td>
+                                <td>{{Name}}</td>
+                                <td>{{Amount}}</td>
+                                <td>{{Export_date}}</td>
+                            </tr>
+                            {{/home_exports}}
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <h1 class="text-center">Xuất hàng kho quán</h1>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Tên kho</th>
+                                <th>Tên hàng</th>
+                                <th>Số lượng</th>
+                                <th>Ngày xuất</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#work_exports}}
+                            <tr>
+                                <td>{{storageName}}</td>
+                                <td>{{Name}}</td>
+                                <td>{{Amount}}</td>
+                                <td>{{Export_date}}</td>
+                            </tr>
+                            {{/work_exports}}
+                        </tbody>
+                    </table>
+                </div>
+              </div>
             </div>
         </div>
     </div>

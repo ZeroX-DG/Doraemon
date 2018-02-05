@@ -7,7 +7,7 @@ use Model\Schedule_details;
 class ShiftController{
 	public function Index(){
 		$shifts = Shifts::all();
-		return View("shiftManagement", ["isAdmin" => true,"shifts" => $shifts]);
+		return View("shiftManagement", ["isAdmin" => $_SESSION['Role'] == ADMIN_ROLE,"shifts" => $shifts]);
 	}
 
 	public function deleteShift(){
@@ -40,7 +40,7 @@ class ShiftController{
 	}
 
 	public function viewAddShift(){
-		return View("addShift", ["isAdmin" => true]);
+		return View("addShift", ["isAdmin" => $_SESSION['Role'] == ADMIN_ROLE]);
 	}
 
 	public function AddShift(){
@@ -79,7 +79,7 @@ class ShiftController{
 			"ScheduleName" => $schedule->Name,
 			"dayOfWeek" => $DayOfWeek,
 			"date" => $date,
-			"isAdmin" => true,
+			"isAdmin" => $_SESSION['Role'] == ADMIN_ROLE,
 			"employees" => []
 		];
 		foreach($details as $detail){

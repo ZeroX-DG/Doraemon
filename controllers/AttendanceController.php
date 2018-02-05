@@ -11,6 +11,9 @@ class AttendanceController{
 		$data = [];
 		// get the latest schedule
 		$scheduleInfo = Schedules::orderBy('id', 'desc')->first();
+		if ($scheduleInfo == null ) {
+			return View("EmployeeAttendance");
+		}
 		// get the employee schedule
 		$userId = $_SESSION['Uid'];
 		$dayOfWeekStr = date('w');
@@ -25,7 +28,11 @@ class AttendanceController{
 		){
 			return View("EmployeeAttendance");
 		}
-		$employeeSchedule = Schedules::find($scheduleInfo->Id)
+		$employeeSchedule = Schedules::find($scheduleInfo->Id);
+		if ($employeeSchedule == null) {
+			return View("EmployeeAttendance");
+		}
+		$employeeSchedule = $employeeSchedule
 										->details()
 										->where('userId', '=', $userId)
 										->where('dayOfWeek', '=', $dayOfWeek)
@@ -75,10 +82,12 @@ class AttendanceController{
 		$date = date('Y-m-d');
 		$time = date('H:i:s');
 		$shiftId = $_POST['ShiftId'];
+    $shiftTime = Shifts::where('Id', '=', $shiftId)->first()->Time_end;
 		$attendance = new Employee_Attendance;
 		$attendance->UserId = $userId;
 		$attendance->Date = $date;
-		$attendance->Time = $time;
+		$attendance->Time_in = $time;
+    $attendance->Time_out = $shiftTime;
 		$attendance->ShiftId = $shiftId;
 		$attendance->IP = get_client_ip(); // in the helper file
 		$attendance->save();
@@ -91,8 +100,7 @@ class AttendanceController{
 
 	public function showList(){
 		$displayname = Users::find($_SESSION['Uid'])->DisplayName;
-		$attendances = Employee_Attendance::where('UserId', '=', $_SESSION['Uid'])
-											->get();
+		$attendances = Employee_Attendance::where('UserId', '=', $_SESSION['Uid'])->orderBy('Date', 'DESC')->get();
 		$data = [];
 		foreach($attendances as $attendance){
 			$shiftInfo = Shifts::find($attendance->ShiftId);
@@ -125,20 +133,21 @@ class AttendanceController{
 					"Time_in" => $attendance->Time_in,
 					"Time_out" => $attendance->Time_out,
 					"ShiftName" => $shiftInfo->Name,
-					"ShiftTime" => $shiftInfo->Time_start . " - " . $shiftInfo->Time_end
+					"ShiftTime" => $shiftInfo->Time_start . " - " . $shiftInfo->Time_end,
+          "Note" => $attendance->Note
 				];
 				array_push($data, $info);
 			}
 			return View("AllEmployeeAttendance", [
 				"attendances" => $data,
-				"isAdmin" => true
+				"isAdmin" => $_SESSION['Role'] == ADMIN_ROLE
 			]);
 		}
 	}
 
 	public function viewAttendanceSchedules(){
 		if($_SESSION['Role'] == ADMIN_ROLE){
-		$schedules = Schedules::all();
+		$schedules = Schedules::orderBy("Date_start", "DESC")->get();
 			$data = [];
 			foreach ($schedules as $schedule) {
 				$arr = [
@@ -154,7 +163,7 @@ class AttendanceController{
 				array_push($data, $arr);
 			}
 			return View("scheduleList", [
-				"isAdmin" => true,
+				"isAdmin" => $_SESSION['Role'] == ADMIN_ROLE,
 				"schedules" => $data
 			]);
 		}
@@ -234,7 +243,7 @@ class AttendanceController{
 			}
 			
 			return View("employeeList", [
-				"isAdmin" => true, 
+				"isAdmin" => $_SESSION['Role'] == ADMIN_ROLE, 
 				"employees" => $employees,
 				"scheduleInfo" => $schedule,
 				"dayOfWeek" => $dayOfWeek,
@@ -282,7 +291,7 @@ class AttendanceController{
 			$attendance->IP = "0.0.0.0";
 			$attendance->Note = $note;
 			$attendance->save();
-			echo "done";
+			echo $attendance;
 		}
 	}
 }
