@@ -4,16 +4,37 @@ use Model\StorageContent;
 use Model\Products;
 use Model\StorageImport;
 use Model\StorageExport;
+use Model\temp_import;
 class StorageController{
 	public function Index(){
 		$Products = Products::all();
-    $storages = Storages::all();
+		$storages = Storages::all();
 		$data = [];
+
     foreach($Products as $product) {
-      $product_details = [];
+			$product_details = [];
+			$temp = temp_import::where('product_id', '=', $product->Id)->get();
+
+			if (count($temp) > 0) {
+				
+				foreach($temp as $tem) {
+					$product_details["temp_amount"] = $tem->amount;
+					$storage = Storages::where('Id', '=', $tem->storage_id)->first();
+					if ($storage->Name == "Kho nhà") {
+						$product_details["temp_storage_home"] = true;
+					}
+					else if ($storage->Name == "Kho quán") {
+						$product_details["temp_storage_work"] = true;
+					}
+					else {
+						$product_details["temp_storage_home"] = false;
+						$product_details["temp_storage_work"] = false;
+					}
+				}
+			}
       $product_details["product_name"] = $product->Name;
       $product_details["product_price"] = number_format($product->Price);
-      $product_details["product_id"] = $product->Id;
+			$product_details["product_id"] = $product->Id;
       // so luong kho nha
       $product_details["product_amount_storage_1"] = 
         $this::getProductAmountInStorage($product->Id, "kho nhà");
@@ -21,12 +42,13 @@ class StorageController{
       $product_details["product_amount_storage_2"] = 
         $this::getProductAmountInStorage($product->Id, "kho quán");
 
-      array_push($data, $product_details);
-    }
+			array_push($data, $product_details);
+		}
+		
     return View("StorageManagement", [
       "isAdmin" => $_SESSION['Role'] == ADMIN_ROLE,
       "data" => $data,
-      "storages" => $storages
+			"storages" => $storages
     ]);
 	}
 
@@ -72,7 +94,7 @@ class StorageController{
 	public function addProduct(){
 		if (havePermission(8)) {
 			$productName = $_POST['name'];
-			$productPrice = $_POST['price'];
+			$productPrice = str_replace(".", "", $_POST['price']);
 			$product = Products::where('Name', '=', $productName)->first();
 
 			if($product == null){
@@ -169,7 +191,8 @@ class StorageController{
           $storageId, $record['productId'], date('Y-m-d'), $record['amount']
         );
       }
-    }
+		}
+		temp_import::truncate();
     redirect("/storage");
   }
 

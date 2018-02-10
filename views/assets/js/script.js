@@ -545,6 +545,8 @@ function importProduct() {
   window.location.href = document.location.href + '/product/import?data=' + JSON.stringify(data);
 }
 
+addToImportList();
+
 $('.datepicker').datepicker({
     format: 'yyyy-mm-dd',
     startDate: '-3d'

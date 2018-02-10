@@ -32,11 +32,21 @@
           <td class="price">{{product_price}} vnđ</td>
           {{#isAdmin}}
           <td>
-            <input type="checkbox" id="home" /> Kho nhà <br>
-            <input type="checkbox" id="work" /> Kho quán
+            {{#temp_storage_home}}
+              <input type="checkbox" checked id="home" /> Kho nhà <br>
+            {{/temp_storage_home}}
+            {{^temp_storage_home}}
+              <input type="checkbox" id="home" /> Kho nhà <br>
+            {{/temp_storage_home}}
+            {{#temp_storage_work}}
+              <input type="checkbox" checked id="work" /> Kho quán
+            {{/temp_storage_work}}
+            {{^temp_storage_work}}
+              <input type="checkbox" id="work" /> Kho quán
+            {{/temp_storage_work}}
           </td>
           <td class="amount">
-            <input type="number" class="form-control" onkeyup="oneDot(this)">
+            <input type="number" value="{{temp_amount}}" class="form-control" onkeyup="oneDot(this)">
           </td>
           <td class="total">0 vnđ</td>
           {{/isAdmin}}
