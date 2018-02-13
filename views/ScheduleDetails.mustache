@@ -28,6 +28,17 @@
       <button style="margin-left: 10px;" class="btn btn-info" data-toggle="modal" data-target="#editScheduleModal">Sửa tên lịch này</button>
       <button style="margin-left: 10px;" class="btn btn-danger" data-toggle="modal" data-target="#deleteScheduleModal">Xóa lịch này</button>
       <a href="{{base_path}}/schedules/details/{{scheduleInfo.Id}}" style="margin-left: 10px;" class="btn btn-info">Xem chi tiết lịch này</a>
+      <div style="margin-left: 10px;" class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+          Chi tiết lịch theo ngày&nbsp;
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          {{#dayOfWeekList}}
+          <li><a href="{{base_path}}/schedules/details/{{scheduleInfo.Id}}/day/{{day}}">Thứ {{day}}</a></li>
+          {{/dayOfWeekList}}
+        </ul>
+      </div>
       {{/isAdmin}}
     </div>
     <br>

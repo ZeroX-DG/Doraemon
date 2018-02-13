@@ -44,7 +44,8 @@ $router->mount('/schedules', function() use ($router){
 	$router->post('/shift/delete', 'ShiftController@deleteShiftFromSchedule');
 	$router->post('/shift/add', 'ShiftController@addShiftToSchedule');
 	$router->get('/shift/find/(\d+)/(\d+)/(\d+)', 'ShiftController@find');
-  $router->get('/details/(\d+)', 'ScheduleController@viewScheduleDetails');
+	$router->get('/details/(\d+)', 'ScheduleController@viewScheduleDetails');
+	$router->get('/details/(\d+)/day/(\d+)', 'ScheduleController@viewScheduleDetailsByDay');
 });
 
 $router->mount('/employeeSchedule', function() use ($router){
@@ -64,6 +65,7 @@ $router->mount('/storage', function() use ($router){
 	$router->get('/', 'StorageController@Index');
 	//$router->get('/(\d+)', 'StorageController@ShowContent');
 	$router->post('/product/delete', 'StorageController@deleteProduct');
+	$router->post('/product/temp', 'StorageController@addTempImport');
 	$router->get('/product/add', 'StorageController@viewAddProduct');
 	$router->post('/product/add', 'StorageController@addProduct');
 	$router->get('/product/edit/(\d+)', 'StorageController@viewEditProduct');

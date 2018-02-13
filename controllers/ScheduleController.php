@@ -105,7 +105,16 @@ class ScheduleController{
 			"isAdmin" => $_SESSION['Role'] == ADMIN_ROLE,
 			"scheduleInfo" => $scheduleInfo,
 			"otherSchedule" => $schedules,
-			"data" => $data
+			"data" => $data,
+			"dayOfWeekList" => [
+				["day" => 2],
+				["day" => 3],
+				["day" => 4],
+				["day" => 5],
+				["day" => 6],
+				["day" => 7],
+				["day" => 8]
+			]
 		]);
 	}
 
@@ -145,7 +154,64 @@ class ScheduleController{
       "isAdmin" => $_SESSION['Role'] == ADMIN_ROLE, 
       "data" => $data
     ]);
-  }
+	}
+	
+	public function viewScheduleDetailsByDay($scheduleId, $dayOfWeek) {
+		// plan:
+		// select schedule details
+		// foreach details
+		// get shift in that details
+		// foreach shifts
+		// get user in that shift in that schedule
+		// return array of user
+		// data type
+		/*
+			data => [
+				shifts => [
+					shift => name,
+					users => [
+						sdasd, asdasd ,asd asd,asd
+					]
+				]
+			]
+		*/
+		$shifts = [];
+		$data = [];
+		$schedule_details = Schedule_details::where('Schedule_id', '=', $scheduleId)
+																				->where('DayOfWeek', '=', $dayOfWeek)
+																				->get();
+		foreach($schedule_details as $detail) {
+			array_push($shifts, $detail->ShiftId);
+		}
+		foreach($shifts as $shift) {
+			$temp = [];
+			$current_shift = Shifts::where('Id', '=', $shift)->first();
+			$temp["shiftName"] = $current_shift->Name;
+			$temp["Time_start"] = $current_shift->Time_start;
+			$temp["Time_end"] = $current_shift->Time_end;
+			$temp["employees"] = [];
+			$shiftDetails = Schedule_details::where('Schedule_id', '=', $scheduleId)
+																			->where('ShiftId', $shift)
+																			->where('DayOfWeek', '=', $dayOfWeek)
+																			->get();
+			foreach($shiftDetails as $shiftDetail) {
+				$emp = Users::where('Id', '=', $shiftDetail->UserId)->first()->DisplayName;
+				array_push($temp["employees"], ["name" => $emp]);
+			}
+			array_push($data, $temp);
+		}
+		$date = Schedule_details::where('Schedule_id', '=', $scheduleId)
+														->where('DayOfWeek', '=', $dayOfWeek)
+														->first()
+														->Date;
+		
+		return View("ScheduleByDay", [
+			"data" => $data,
+			"date" => $date,
+			"dayOfWeek" => $dayOfWeek,
+			"isAdmin" => $_SESSION['Role'] == ADMIN_ROLE
+		]);
+	}
 
 	public function detailOfDate($scheduleId, $date) {
 		// plan:
@@ -220,7 +286,7 @@ class ScheduleController{
 		
 		$shiftCount = count($shifts);
 		return View("ScheduleDetailsOfDate", [
-			'isAdmin' => true, 
+			'isAdmin' => $_SESSION['Role'] == ADMIN_ROLE, 
 			'dayOfWeek' => $date,
 			'date' => date("d", strtotime($time)),
 			'month' => date("m", strtotime($time)),

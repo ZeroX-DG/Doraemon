@@ -194,7 +194,29 @@ class StorageController{
 		}
 		temp_import::truncate();
     redirect("/storage");
-  }
+	}
+	
+	public function addTempImport() {
+		$data = $_POST['data'];
+		temp_import::truncate();
+		foreach($data as $temp) {
+			if ($temp["isHomeStorage"] == "true") {
+				$import = new temp_import;
+				$import->product_id = $temp["productId"];
+				$import->amount = $temp["amount"];
+				$import->storage_id = Storages::where('Name', '=', 'Kho nhà')->first()->Id;
+				$import->save();
+			}
+
+			if ($temp["isWorkStorage"] == "true") {
+				$import = new temp_import;
+				$import->product_id = $temp["productId"];
+				$import->amount = $temp["amount"];
+				$import->storage_id = Storages::where('Name', '=', 'Kho quán')->first()->Id;
+				$import->save();
+			}
+		}
+	}
 
 	public function importProduct($storageId, $productId, $date, $amount){
 		$import = new StorageImport;

@@ -527,8 +527,15 @@ function buildImportListHtml(data) {
 
 function addToImportList() {
   let data = getSaveStorageData();
-  let html = buildImportListHtml(data);
-  $("#importList").html(html);
+	let html = buildImportListHtml(data);
+	let url = document.location.href;
+	$("#importList").html(html);
+	// add to temp
+	$.ajax({
+		method: "POST",
+		url: url + '/product/temp',
+		data: {data}
+	});
 }
 
 function removeFromImportList(e) {
