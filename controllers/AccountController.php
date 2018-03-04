@@ -67,10 +67,12 @@ class AccountController{
 	public function EditAccountmanagement($id){
     if(havePermission(2)){
   		$username = $_POST['UserName'];
-  		$DisplayName = $_POST['DisplayName'];
+			$DisplayName = $_POST['DisplayName'];
+			$password = $_POST['PassWord'];
   		$cemployee = Users::find($id);
   		$cemployee->UserName = $username;
-  		$cemployee->DisplayName = $DisplayName;
+			$cemployee->DisplayName = $DisplayName;
+			$cemployee->PassWord = md5($password);
   		$cemployee->save();
   		redirect("/account");
     }

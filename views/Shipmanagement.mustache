@@ -34,9 +34,7 @@
                     <th>Số điện thoại</th>
                     <th>Giá đơn hàng</th>
                     <th>Giá ship</th>
-                    {{^history}}
                     <th>Thao tác</th>
-                    {{/history}}
                 </tr>
             </thead>
             <tbody>
@@ -55,6 +53,11 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <a class="btn btn-primary" href="{{base_path}}/ships/edit/{{Id}}">Chỉnh sửa</a>
                         &nbsp;&nbsp;&nbsp;&nbsp;
+                        <button class="btn btn-danger" data-id="{{Id}}" data-target="#cancelShipModal" data-toggle="modal" type="button">Hủy</button>
+                    </td>
+                    {{/history}}
+                    {{#history}}
+                    <td>
                         <button class="btn btn-danger" data-id="{{Id}}" data-target="#cancelShipModal" data-toggle="modal" type="button">Hủy</button>
                     </td>
                     {{/history}}

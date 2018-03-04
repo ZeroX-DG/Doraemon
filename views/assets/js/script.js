@@ -264,7 +264,7 @@ $(".cancelShip").click(function(e){
 	let id = $(this).data("id");
 	$.ajax({
 		method: "POST",
-		url: document.location.href + '/cancel',
+		url: document.location.href.replace('/history', '') + '/cancel',
 		data: { Id: id },
 		success: function(mes) {
 			if(mes.indexOf("done") != -1){
@@ -483,13 +483,14 @@ $(".amount input").keyup(function(){
 function getSaveStorageData(){
   let listOfProduct = $(".product");
   let data = [];
-    listOfProduct.each(function(index, item){
+  listOfProduct.each(function(index, item){
     let obj = {};
     let current = $(item);
-    let total = current.find(".total").text();
     let productName = current.find(".productName").text();
     let price = current.find(".price").text();
-    let amount = current.find(".amount input").val();
+		let amount = current.find(".amount input").val();
+		let total = numberWithCommas(parseInt(amount) * parseInt(
+			price.replace(",", "").replace("vnđ", ""))) + ' vnđ';
     let isHomeStorage = current.find("#home").prop("checked");
     let isWorkStorage = current.find("#work").prop("checked");
     if (isHomeStorage || isWorkStorage && amount != "") {
@@ -529,6 +530,13 @@ function addToImportList() {
   let data = getSaveStorageData();
 	let html = buildImportListHtml(data);
 	let url = document.location.href;
+	let totalPrice = 0;
+	for(let i = 0; i < data.length; i++) {
+		totalPrice += parseInt(data[i].amount) * parseInt(
+			data[i].price.replace(",", "").replace("vnđ", ""));
+	}
+	console.log(data);
+	$("#total").html(numberWithCommas(totalPrice) + ' vnđ');
 	$("#importList").html(html);
 	// add to temp
 	$.ajax({

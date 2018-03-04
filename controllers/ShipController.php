@@ -182,7 +182,10 @@ class ShipController{
 
 	public function search($address, $shipper, $distance, $phone){
 		$result = null;
-		if($address != ""){
+		if($address != "" && $result != null){
+			$result = $result->where("Address" , "LIKE", "%".$address."%");
+		}
+		else if($address != "" && $result == null){
 			$result = Ships::where("Address" , "LIKE", "%".$address."%");
 		}
 		if($shipper != "" && $result != null){
@@ -197,10 +200,10 @@ class ShipController{
 			$result = Ships::whereIn("Shipper" , $shippers);
 		}
 		if($distance != "" && $result != null){
-			$result = $result->where("Distance" , "=", $distance);
+			$result = $result->where("Distance" , "LIKE", $distance);
 		}
 		else if($distance != "" && $result == null){
-			$result = Ships::where("Distance" , "=", $distance);
+			$result = Ships::where("Distance" , "LIKE", $distance);
 		}
 		if($phone != "" && $result != null){
 			$result = $result->where("Phone" , "LIKE", "%".$phone."%");
